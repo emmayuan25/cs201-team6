@@ -9,7 +9,17 @@ DROP TABLE IF EXISTS Interest;
 
 CREATE TABLE Interest (
 	interestID int(11) primary key not null auto_increment,
-	interestList varchar(500) not null);
+	viterbi bit not null DEFAULT 0,
+	dornsife bit not null DEFAULT 0,
+	marshall bit not null DEFAULT 0,
+	computerScience bit not null DEFAULT 0,
+	csba bit not null DEFAULT 0,
+	businessAdmin bit not null DEFAULT 0,
+	csgames bit not null DEFAULT 0,
+	cais bit not null DEFAULT 0,
+	athenaHacks bit not null DEFAULT 0,
+	scope bit not null DEFAULT 0
+);
 
 ALTER TABLE Interest AUTO_INCREMENT=111;
     
@@ -52,7 +62,7 @@ CREATE TABLE ChatMessage (
 
 ALTER TABLE ChatMessage AUTO_INCREMENT=0;
 
-INSERT INTO Interest(interestList) VALUES ('Computer Science');
+INSERT INTO Interest(viterbi) VALUES (1);
 INSERT INTO UserLogin(interestID, userName, password) VALUES (111, 'Sanya', 'password123');
 INSERT INTO Post(postText, userID, interestID) VALUES ('I am posting', 1, 111);
 INSERT INTO Chat(userID, accessTime) VALUES (1, '2022-08-08');
