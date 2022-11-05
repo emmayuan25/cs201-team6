@@ -1,0 +1,122 @@
+public User userAuthentication(String username, String password){
+    Connection conn=null;
+    Statement st= null;
+    ResultSet rs = null;
+    try{
+        conn = DriverManager.getConnection(add name);
+        st = conn.createStatement();
+        rs= st.executeQuery("Select * from User where fname='"+ username+"'");
+        if(rs.next()==false){
+            System.out.print("Invalid username or password please try again.");
+            return;
+        }else{
+            while(rs.next()){
+                String user = rs.getString("fname");
+                String pass = rs.getString("password");
+                if(pass ==null){
+                    System.out.print("Invalid username or password please try again.");
+                    return;
+                }
+            }
+            //return user object
+
+        }
+
+    }
+}
+
+public void run(){
+    System.out.println("Please log in or sign up");
+    //create a button that activates the class
+    //if button selected is log in 
+        //User u= call userAuthentication class
+    //else if button selected is sign up
+        //User u = call create new user class
+        
+}
+
+public User createNewUser(){
+    Scanner in = new Scanner(System.in);
+   
+    System.out.println("Name: ");
+    String name = in.nextLine();
+    System.out.println("Email: ");
+    String email = in.nextLine();
+    Sytem.out.println("Linkedin: ");
+    String linkedIn = in.nextLine();
+    System.out.println("Year of Graduation: ");
+    int gradYear = in.nextInt();
+    Sytem.out.println("Username: ");
+    String userName = in.nextLine();
+    Sytem.out.println("Password: ");
+    String password = in.nextLine();
+    // add drop down for majors
+    //add drop down for clubs
+    //add profile photos
+}
+
+public void deleteUser(){
+    try{
+        conn = DriverManager.getConnection(add name);
+        st = conn.createStatement();
+        String username = get the name of user;
+        rs= st.executeQuery("Select * from User where username='"+ username+"'");
+        while(rs.next()){
+            String user = rs.getString("fname");
+            String pass = rs.getString("password");
+            String userId = rs.getString("ID");
+        }
+        PreparedStatement pstmt = conn.prepareStatement("DELETE FROM User where id = ?");
+        pstmt.setString(1, userID);
+        psmt.executeUpdate();
+
+        conn2 = DriverManager.getConnection(add name of other table);
+        PreparedStatement pstmt2 = conn2.prepareStatement("DELETE FROM User where id = ?");
+        pstmt.setString(1, userID);
+        psmt.executeUpdate();
+
+        //return user object
+
+    }
+}
+
+public List<User> searchKeyword(String name){
+    List<User> returnUser = new ArrayList<User>();
+    try{
+        conn = DriverManager.getConnection(add name);
+        st = conn.createStatement();
+        //check the user by name
+        rs= st.executeQuery("Select * from User where username='"+ name+"'");
+        if(rs.next()!=null){
+            while(rs.next()){
+                String user = rs.getString("fname");
+                get user object
+                returnUser.add(user object);
+            }
+        }
+
+        //check the user according to major
+        rs= st.executeQuery("Select * from User where major='"+ name+"'");
+        if(rs.next()!=null){
+            while(rs.next()){
+                String user = rs.getString("major");
+                get user object
+                returnUser.add(user object);
+            }
+        }
+
+        //check the user according to club
+        rs= st.executeQuery("Select * from User where club='"+ name+"'");
+        if(rs.next()!=null){
+            while(rs.next()){
+                String user = rs.getString("club");
+                get user object
+                returnUser.add(user object);
+            }
+        }
+        
+    }
+
+    return returnUser;
+    
+}
