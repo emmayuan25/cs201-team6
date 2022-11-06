@@ -87,6 +87,8 @@ public class User {
 		// we know userID; postID is auto-generated; interestID can be found by String interest
 		String queryFindInterestID = null; // TO DO: prepare query statement
 		String queryInsertNewPost = null; // TO DO: prepare query statement
+		// TO DO: use current system time for "time" entry in Post table in database
+		
 		createNewPostHelper(queryFindInterestID, queryInsertNewPost);		
 	}
 	
@@ -123,5 +125,30 @@ public class User {
 			}	
 		}
 	}
+	
+	// when user wants to edit a post, the client side should provide the postID
+	public void editExistingPost(int postID, String newPostText, String newPostImage) {
+		// TO DO: prepare query statement for UPDATE
+		String query = null;
+		editExistingPostHelper(query);
+	}
+	
+	// TO DO
+	public void editExistingPostHelper(String query) {
+		
+	}
+	
+	// when user wants to delete a post, the client side should provide the postID
+	public void deletePost(int postID) {
+		// TO DO: prepare query statement for DELETE
+		String query = null;
+		deletePostHelper(query);
+	}
+	
+	// TO DO
+	public void deletePostHelper(String query) {
+		
+	}
+	
 	
 }
