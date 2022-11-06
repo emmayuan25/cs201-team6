@@ -15,7 +15,6 @@ public class Post {
 		this.time = time;
 		this.username = username;
 		this.profilePicture = profilePicture;
-	
 	}
 	public int getPostID() {
 		return this.postID;
