@@ -22,7 +22,8 @@ public class User {
 		this.followingID = followingID;
 	}
 	
-	public void displayPosts() {
+	// ServerThread should send posts to client
+	public ArrayList<Post> displayPosts() {
 		// prepare the query statement for fetchPosts
 		// get the posts made by the user and posts made by those who the user follows
 		// and the posts that match user's interests
@@ -41,8 +42,7 @@ public class User {
 		query += ") order by p.time desc";
 		
 		ArrayList<Post> postList = fetchPosts(query);
-		
-		// TO DO: send postList to client
+		return postList;
 	}
 	
 	// combines fetchPostByUser, fetchPostByInterest, and sortByTime
@@ -83,8 +83,45 @@ public class User {
 		return postList;
 	}
 	
-	public void createNewPost() {
+	public void createNewPost(String postText, String postImage, String interest) {
+		// we know userID; postID is auto-generated; interestID can be found by String interest
+		String queryFindInterestID = null; // TO DO: prepare query statement
+		String queryInsertNewPost = null; // TO DO: prepare query statement
+		createNewPostHelper(queryFindInterestID, queryInsertNewPost);		
+	}
+	
+	public static synchronized void createNewPostHelper(String query1, String query2) {
+		String url = null;	// change this to the URL needed to connect to database
+		Connection conn = null;
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		PreparedStatement ps2 = null;
+		ResultSet rs2 = null;
 		
+		try {
+			conn = DriverManager.getConnection(url);
+			
+			// get interestID
+			ps1 = conn.prepareStatement(query1);
+			rs1 = ps1.executeQuery();
+			// TO DO: parse output
+			
+			// insert new post into database
+			ps2 = conn.prepareStatement(query2);
+			rs2 = ps2.executeQuery();
+		} catch(SQLException sqle) {
+			System.out.println(sqle.getMessage());
+		} finally {
+			try {
+				if(rs2 != null) rs2.close();
+				if(ps2 != null) ps2.close();
+				if(rs1 != null) rs1.close();
+				if(ps1 != null) ps1.close();
+				if(conn != null) conn.close();
+			} catch(SQLException sqle) {
+				System.out.println(sqle.getMessage());
+			}	
+		}
 	}
 	
 }
