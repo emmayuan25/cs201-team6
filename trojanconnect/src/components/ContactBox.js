@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import userpng from '../assets/user.png';
 
 function ContactBox(props) {
     const [isActive, setIsActive] = useState(true);
@@ -9,11 +10,11 @@ function ContactBox(props) {
 
     return (
         <div 
-            className='my-10 cursor-pointer text-center'
-            style={{backgroundColor: isActive ? 'white' : 'yellow'}}
+            className='my-10 cursor-pointer text-center flex'
+            style={{backgroundColor: isActive ? 'white' : '#FFCC00'}}
             onClick={handleChange}
         >
-            {/* <img src="../assets/user.png" alt="user" /> */}
+            <img className='w-8 mx-4 justify-center flex' src={userpng} alt="user" />
             <span className='text-2xl inline-block'>{props.username}</span>
         </div>
     )
