@@ -282,42 +282,27 @@ public class User {
 				String messageText = rs1.getString("messageText");
 				Timestamp timestamp = rs1.getTimestamp("createdAt");
 				
-				// get username and userProfilePicture
-				try {
-					ps2 = conn.prepareStatement(queryUserInfo);
-					
-					if(searchUserType.equals("receiver")) {
-						ps2.setInt(1, receiverID);
-						rs2 = ps2.executeQuery();
-						if(rs2.next()) {
-							String receiverUsername = rs2.getString("userName");
-							String receiverProfilePicture = rs2.getString("profilePicture");
-							ChatMessage message = new ChatMessage(messageID, senderID, receiverID, callerUsername, receiverUsername, callerProfilePicture, receiverProfilePicture, messageText, timestamp);
-							messageList.add(message);
-						}
-					}
-					
-					else {
-						ps2.setInt(1, senderID);
-						rs2 = ps2.executeQuery();
-						if(rs2.next()) {
-							String senderUsername = rs2.getString("userName");
-							String senderProfilePicture = rs2.getString("profilePicture");
-							ChatMessage message = new ChatMessage(messageID, senderID, receiverID, senderUsername, callerUsername, senderProfilePicture, callerProfilePicture, messageText, timestamp);
-							messageList.add(message);
-						}
-					}
-				} catch(SQLException sqle) {
-					System.out.println(sqle.getMessage());
-				} finally {
-					try {
-						if(rs2 != null) rs2.close();
-						if(ps2 != null) ps2.close();
-						if(conn != null) conn.close();
-					} catch(SQLException sqle) {
-						System.out.println(sqle.getMessage());
-					}	
+				if(searchUserType.equals("receiver")) {
+					// get username and profilePicture
+					String[] userInfo = chatUserInfoHelper(conn, queryUserInfo, receiverID);
+					String receiverUsername = null;
+					String receiverProfilePicture = null;
+					if(userInfo[0] != null) receiverUsername = userInfo[0];
+					if(userInfo[1] != null) receiverProfilePicture = userInfo[1];
+					ChatMessage message = new ChatMessage(messageID, senderID, receiverID, callerUsername, receiverUsername, callerProfilePicture, receiverProfilePicture, messageText, timestamp);
+					messageList.add(message);
 				}
+				
+				else {
+					// get username and profilePicture
+					String[] userInfo = chatUserInfoHelper(conn, queryUserInfo, senderID);
+					String senderUsername = null;
+					String senderProfilePicture = null;
+					if(userInfo[0] != null) senderUsername = userInfo[0];
+					if(userInfo[1] != null) senderProfilePicture = userInfo[1];
+					ChatMessage message = new ChatMessage(messageID, senderID, receiverID, senderUsername, callerUsername, senderProfilePicture, callerProfilePicture, messageText, timestamp);
+					messageList.add(message);
+				}	
 			}			
 		} catch(SQLException sqle) {
 			System.out.println(sqle.getMessage());
@@ -332,5 +317,35 @@ public class User {
 		}
 		
 		return messageList;
+	}
+	
+	// get username and userProfilePicture	
+	public static synchronized String[] chatUserInfoHelper(Connection conn, String query, int userID) {
+		String[] userInfo = new String[2];
+		userInfo[0] = null;
+		userInfo[1] = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			ps = conn.prepareStatement(query);
+			ps.setInt(1, userID);
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				userInfo[0] = rs.getString("userName");
+				userInfo[1] = rs.getString("profilePicture");
+			}
+		} catch(SQLException sqle) {
+			System.out.println(sqle.getMessage());
+		} finally {
+			try {
+				if(rs != null) rs.close();
+				if(ps != null) ps.close();
+			} catch(SQLException sqle) {
+				System.out.println(sqle.getMessage());
+			}	
+		}
+		
+		return userInfo;
 	}
 }
