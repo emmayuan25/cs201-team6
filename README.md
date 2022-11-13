@@ -4,4 +4,4 @@ Final Project Team 6
 # Getting Started
 Clone the repository to local, run `npm install`
 
-the, run `npm start` to view in browser
+then, run `npm start` to view in browser

@@ -7,7 +7,11 @@ function ChatBox(props) {
     const outMsg = "Text text text text text text text";
 
     return (
-        <div className="bg-red w-4/5 h-screen">
+        <div className="bg-red w-4/5 h-screen scroll-smooth overflow-y-auto pb-8">
+            <InMsg text={inMsg} />
+            <OutMsg text={outMsg} />
+            <InMsg text={inMsg} />
+            <OutMsg text={outMsg} />
             <InMsg text={inMsg} />
             <OutMsg text={outMsg} />
             <InMsg text={inMsg} />
