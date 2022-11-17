@@ -64,3 +64,5 @@ public class ChatMessage {
 		return timestampString;
 	}
 }
+
+// TO DO: comparator

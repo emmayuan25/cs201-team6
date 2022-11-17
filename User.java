@@ -57,7 +57,7 @@ public class User {
 	}
 	
 	// combines fetchPostByUser, fetchPostByInterest, and sortByTime
-	public static synchronized ArrayList<Post> fetchPostsHelper(String query) {
+	private static synchronized ArrayList<Post> fetchPostsHelper(String query) {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -119,7 +119,7 @@ public class User {
 	}
 	
 	// find the interestID for a given interest String
-	public static synchronized int getInterestID(String interestName) {
+	private static synchronized int getInterestID(String interestName) {
 		String query = "select interestID from Interest where interestName=?"; // TO DO: check if Interest table has been changed
 		
 		Connection conn = null;
@@ -153,7 +153,7 @@ public class User {
 	
 	
 	// returns postID of the new post inserted
-	public static synchronized int createNewPostHelper(String queryInsertNewPost, String postText, String postImage, Timestamp timestamp) {
+	private static synchronized int createNewPostHelper(String queryInsertNewPost, String postText, String postImage, Timestamp timestamp) {
 		Connection conn = null;
 		PreparedStatement ps1 = null;
 		ResultSet rs1 = null;
@@ -174,7 +174,7 @@ public class User {
 			ps2 = conn.prepareStatement("select scope_identity()");
 			rs2 = ps2.executeQuery();
 			if(rs2.next()) {
-				postID = rs2.getInt(postID); // check if this works
+				postID = rs2.getInt("postID"); // check if this works
 			}
 
 		} catch(SQLException sqle) {
@@ -202,67 +202,128 @@ public class User {
 	}
 	
 	// TO DO
-	public void editExistingPostHelper(String query) {
+	private static synchronized void editExistingPostHelper(String query) {
 		
 	}
 	
 	// when user wants to delete a post, the client side should provide the postID
 	public void deletePost(int postID) {
-		// TO DO: prepare query statement for DELETE
-		String query = null;
-		deletePostHelper(query);
+		String query = "delete from Post where postID=?";
+		deletePostHelper(query, postID);
 	}
 	
-	// TO DO
-	public static synchronized void deletePostHelper(String query) {
+	private static synchronized void deletePostHelper(String query, int postID) {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 		
+		try {
+			conn = DriverManager.getConnection(User.connectionURL);
+			
+			ps = conn.prepareStatement(query);
+			ps.setInt(1, postID);
+			rs = ps.executeQuery();
+		} catch(SQLException sqle) {
+			System.out.println(sqle.getMessage());
+		} finally {
+			try {
+				if(rs != null) rs.close();
+				if(ps != null) ps.close();
+				if(conn != null) conn.close();
+			} catch(SQLException sqle) {
+				System.out.println(sqle.getMessage());
+			}	
+		}
 	}
 	
-	public void getCurrentChats() {
+	// the list of chats returned is ordered from most recent to least recent
+	public ArrayList<Chat> getCurrentChats() {
 		// prepare query statement
 		String queryUserInfo = "select userName, userImage from User where userID=?";
 		
-		String queryGetMessagesSent = "select messageID, fromUID, toUID, messageText, createdAt from ChatMessage where fromUID='" + this.userID + "'";
+		String queryGetMessagesSent = "select c.messageID, c.fromUID, c.toUID, c.messageText, c.createdAt, u.userName, u.userImage from ChatMessage c, User u where c.fromUID='" + this.userID + "' and c.toUID=u.userID order by c.toUID, c.createdAt desc";
 		ArrayList<ChatMessage> messagesSent = getChatMessagesHelper(queryGetMessagesSent, queryUserInfo, "receiver", this.username, this.profilePicture);
 		
-		String queryGetMessagesReceived = "select messageID, fromUID, toUID, messageText, createdAt from ChatMessage where toUID='" + this.userID + "'";
+		String queryGetMessagesReceived = "select c.messageID, c.fromUID, c.toUID, c.messageText, c.createdAt, u.userName, u.userImage from ChatMessage c, User u where c.toUID='" + this.userID + "' and c.fromID=u.userID order by c.fromUID, c.createdAt desc";
 		ArrayList<ChatMessage> messagesReceived = getChatMessagesHelper(queryGetMessagesReceived, queryUserInfo, "sender", this.username, this.profilePicture);
 		
-		// separate the messages based on receiverID
-		// key = receiverID
-		HashMap<Integer, ArrayList<ChatMessage>> chats_sent_map = new HashMap<Integer, ArrayList<ChatMessage>>();
-		for(ChatMessage mSent : messagesSent) {
-			ArrayList<ChatMessage> value = chats_sent_map.get(mSent.getReceiverID());
-			// if this receiverID is not in the map
-			if(value == null) {
-				value = new ArrayList<ChatMessage>();
+		// keep track of the chats we instantiated
+		// key = friendUserID, value = chat
+		HashMap<Integer, Chat> chats_map = new HashMap<Integer, Chat>();
+		
+		// separate the chat messages by the chats
+		ArrayList<Chat> chat_list = new ArrayList<Chat>();
+		ArrayList<ChatMessage> message_list = new ArrayList<ChatMessage>();
+		for(int i=0; i<messagesSent.size(); i++) {
+			ChatMessage current_message = messagesSent.get(i);
+			message_list.add(current_message);
+			
+			// if this element is the last one, or if the next element has a different receiverID, we know this is where chats change
+			if(i == messagesSent.size()-1 || messagesSent.get(i+1).getReceiverID() !=  current_message.getReceiverID()) {
+				int userID = this.userID;
+				int friendID = current_message.getReceiverID();
+				String username = this.username;
+				String friendUsername = current_message.getReceiverUsername();
+				String userProfilePicture = this.profilePicture;
+				String friendProfilePicture = current_message.getReceiverProfilePicture();
+				ArrayList<ChatMessage> messagesSentForCurrentChat = message_list;
+				ArrayList<ChatMessage> messagesReceivedForCurrentChat = null;
+				Timestamp lastMessageTime = message_list.get(0).getTimestamp();
+				Chat currentChat = new Chat(userID, friendID, username, friendUsername, userProfilePicture, friendProfilePicture, messagesSentForCurrentChat, messagesReceivedForCurrentChat, lastMessageTime);
+				chat_list.add(currentChat);
+				chats_map.put(friendID, currentChat);
+				message_list = new ArrayList<ChatMessage>();
 			}
-			// add this message to map
-			value.add(mSent);
-			// update map
-			chats_sent_map.put(mSent.getReceiverID(), value);
 		}
 		
-		// separate the messages based on senderID
-		// key = senderID
-		HashMap<Integer, ArrayList<ChatMessage>> chats_received_map = new HashMap<Integer, ArrayList<ChatMessage>>();
-		for(ChatMessage mReceived : messagesReceived) {
-			ArrayList<ChatMessage> value = chats_received_map.get(mReceived.getSenderID());
-			// if this senderID is not in the map
-			if(value == null) {
-				value = new ArrayList<ChatMessage>();
+		message_list = new ArrayList<ChatMessage>();
+		for(int i=0; i<messagesReceived.size(); i++) {
+			ChatMessage current_message = messagesReceived.get(i);
+			message_list.add(current_message);
+			
+			// if this element is the last one, or if the next element has a different receiverID, we know this is where chats change
+			if(i == messagesReceived.size()-1 || messagesReceived.get(i+1).getSenderID() !=  current_message.getSenderID()) {
+				// check if a Chat object between the sender and the user already exists
+				Chat currentChat = chats_map.get(current_message.getSenderID());
+				// if the currentChat already exists, add messagesReceivedForCurrentChat
+				if(currentChat != null) {
+					// add messagesReceived to currentChat
+					ArrayList<ChatMessage> messagesReceivedForCurrentChat = message_list;
+					currentChat.setMessagesReceived(messagesReceivedForCurrentChat);
+					
+					// compare lastMessageTime
+					Timestamp lastMessageReceivedTime = message_list.get(0).getTimestamp();
+					Timestamp lastMessageSentTime = currentChat.getLastMessageTime();
+					// if lastMessagereceivedtime is later
+					if(lastMessageReceivedTime.compareTo(lastMessageSentTime) > 0) {
+						currentChat.setLastMessageTime(lastMessageReceivedTime);
+					}
+				}
+				
+				else {
+					int userID = this.userID;
+					int friendID = current_message.getSenderID();
+					String username = this.username;
+					String friendUsername = current_message.getSenderUsername();
+					String userProfilePicture = this.profilePicture;
+					String friendProfilePicture = current_message.getSenderProfilePicture();
+					ArrayList<ChatMessage> messagesSentForCurrentChat = null;
+					ArrayList<ChatMessage> messagesReceivedForCurrentChat = message_list;
+					Timestamp lastMessageTime = message_list.get(0).getTimestamp();
+					currentChat = new Chat(userID, friendID, username, friendUsername, userProfilePicture, friendProfilePicture, messagesSentForCurrentChat, messagesReceivedForCurrentChat, lastMessageTime);
+					chat_list.add(currentChat);
+					message_list = new ArrayList<ChatMessage>();
+				}	
 			}
-			// add this message to map
-			value.add(mReceived);
-			//update map
-			chats_received_map.put(mReceived.getSenderID(), value);
 		}
 		
-		// TO DO: create Chat Objects
+		// the list of chats returned is ordered from most recent to least recent
+		chat_list.sort(new ChatComparator());
+		return chat_list;
 	}
 	
 	// searchUserType lets the method know whether we are searching user info for the sender or the receiver
-	public static synchronized ArrayList<ChatMessage> getChatMessagesHelper(String queryMessages, String queryUserInfo, String searchUserType, String callerUsername, String callerProfilePicture) {
+	private static synchronized ArrayList<ChatMessage> getChatMessagesHelper(String queryMessages, String queryUserInfo, String searchUserType, String callerUsername, String callerProfilePicture) {
 		Connection conn = null;
 		PreparedStatement ps1 = null;
 		ResultSet rs1 = null;
@@ -276,31 +337,21 @@ public class User {
 			rs1 = ps1.executeQuery();
 			while(rs1.next()) {
 				// initialize ChatMessage objects based on result set and add to list
-				int messageID = rs1.getInt("messageID");
-				int senderID = rs1.getInt("fromUID");
-				int receiverID = rs1.getInt("toUID");
-				String messageText = rs1.getString("messageText");
-				Timestamp timestamp = rs1.getTimestamp("createdAt");
+				int messageID = rs1.getInt("c.messageID");
+				int senderID = rs1.getInt("c.fromUID");
+				int receiverID = rs1.getInt("c.toUID");
+				String messageText = rs1.getString("c.messageText");
+				Timestamp timestamp = rs1.getTimestamp("c.createdAt");
+				String friendUsername = rs1.getString("u.userImage");
+				String friendProfilePicture = rs1.getString("u.userImage");
 				
 				if(searchUserType.equals("receiver")) {
-					// get username and profilePicture
-					String[] userInfo = chatUserInfoHelper(conn, queryUserInfo, receiverID);
-					String receiverUsername = null;
-					String receiverProfilePicture = null;
-					if(userInfo[0] != null) receiverUsername = userInfo[0];
-					if(userInfo[1] != null) receiverProfilePicture = userInfo[1];
-					ChatMessage message = new ChatMessage(messageID, senderID, receiverID, callerUsername, receiverUsername, callerProfilePicture, receiverProfilePicture, messageText, timestamp);
+					ChatMessage message = new ChatMessage(messageID, senderID, receiverID, callerUsername, friendUsername, callerProfilePicture, friendProfilePicture, messageText, timestamp);
 					messageList.add(message);
 				}
 				
 				else {
-					// get username and profilePicture
-					String[] userInfo = chatUserInfoHelper(conn, queryUserInfo, senderID);
-					String senderUsername = null;
-					String senderProfilePicture = null;
-					if(userInfo[0] != null) senderUsername = userInfo[0];
-					if(userInfo[1] != null) senderProfilePicture = userInfo[1];
-					ChatMessage message = new ChatMessage(messageID, senderID, receiverID, senderUsername, callerUsername, senderProfilePicture, callerProfilePicture, messageText, timestamp);
+					ChatMessage message = new ChatMessage(messageID, senderID, receiverID, friendUsername, callerUsername, friendProfilePicture, callerProfilePicture, messageText, timestamp);
 					messageList.add(message);
 				}	
 			}			
@@ -317,35 +368,5 @@ public class User {
 		}
 		
 		return messageList;
-	}
-	
-	// get username and userProfilePicture	
-	public static synchronized String[] chatUserInfoHelper(Connection conn, String query, int userID) {
-		String[] userInfo = new String[2];
-		userInfo[0] = null;
-		userInfo[1] = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		
-		try {
-			ps = conn.prepareStatement(query);
-			ps.setInt(1, userID);
-			rs = ps.executeQuery();
-			if(rs.next()) {
-				userInfo[0] = rs.getString("userName");
-				userInfo[1] = rs.getString("profilePicture");
-			}
-		} catch(SQLException sqle) {
-			System.out.println(sqle.getMessage());
-		} finally {
-			try {
-				if(rs != null) rs.close();
-				if(ps != null) ps.close();
-			} catch(SQLException sqle) {
-				System.out.println(sqle.getMessage());
-			}	
-		}
-		
-		return userInfo;
 	}
 }
