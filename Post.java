@@ -10,6 +10,7 @@ public class Post {
 	private Timestamp timestamp;
 	private String username;
 	private String profilePicture;
+	private boolean edited;
 	private SimpleDateFormat timeFormatter;
 	
 	public Post(int postID, String postText, String postImage, Timestamp timestamp, String username, String profilePicture) {
@@ -19,6 +20,7 @@ public class Post {
 		this.timestamp = timestamp;
 		this.username = username;
 		this.profilePicture = profilePicture;
+		this.edited = false;
 		
 		// reference for SimpleDateFormat: https://docs.oracle.com/javase/tutorial/i18n/format/simpleDateFormat.html
 		// and reference: https://www.geeksforgeeks.org/program-to-convert-milliseconds-to-a-date-format-in-java/
@@ -47,5 +49,11 @@ public class Post {
 	public String getTimestampString() {
 		String timestampString = this.timeFormatter.format(this.timestamp);
 		return timestampString;
+	}
+	public boolean getEdited() {
+		return this.edited;
+	}
+	public void setEdited(boolean edited) {
+		this.edited = edited;
 	}
 }
