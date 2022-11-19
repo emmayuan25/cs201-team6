@@ -3,9 +3,9 @@ USE T2T;
 
 DROP TABLE IF EXISTS ChatMessage;
 DROP TABLE IF EXISTS Post;
+DROP TABLE IF EXISTS Following;
 DROP TABLE IF EXISTS User;
 DROP TABLE IF EXISTS Interest;
-
 
 CREATE TABLE Interest (
 	interestID int(11) primary key not null auto_increment,
@@ -18,9 +18,8 @@ CREATE TABLE Interest (
 	csgames bit not null DEFAULT 0,
 	cais bit not null DEFAULT 0,
 	athenaHacks bit not null DEFAULT 0,
-	scope bit not null DEFAULT 0
+	scope bit not null DEFAULT 0 
 );
-
 
 ALTER TABLE Interest AUTO_INCREMENT=0;
     
@@ -34,11 +33,17 @@ CREATE TABLE User (
     
 ALTER TABLE User AUTO_INCREMENT=0;
 
+CREATE TABLE Following (
+	followID int(11) not null,
+	FOREIGN KEY pk1(followID) REFERENCES User(userID)
+);
+
 CREATE TABLE Post (
 	postID int(11) primary key not null auto_increment,
 	postText varchar(500) not null,
     postImage varchar(500) default null,
     postCreatedAt datetime not null,
+    postEdited bit not null DEFAULT 0,
     userID int(11) not null,
     interestID int(11)  not null,
     FOREIGN KEY fk1(userID) REFERENCES User(userID),
@@ -69,6 +74,10 @@ INSERT INTO User(interestID, userName, password) VALUES (3, 'Jacky', 'p0');
 INSERT INTO User(interestID, userName, password) VALUES (4, 'Emma', 'pass');
 INSERT INTO User(interestID, userName, password) VALUES (5, 'Jacky', 'passw0rd');
 
+ALTER TABLE Following
+ADD One bit;
+INSERT INTO Following (followID) VALUES (1);
+
 INSERT INTO Post(postText, postCreatedAt, userID, interestID) VALUES ('I am posting', '2020-11-07T0:08:22', 1, 1);
 INSERT INTO Post(postText, postCreatedAt, userID, interestID) VALUES ('Here', '2021-08-06T09:23:00', 1, 2);
 INSERT INTO Post(postText, postImage, postCreatedAt, userID, interestID) VALUES ('Image post', 'https://en.wikipedia.org/wiki/File:Riemann_sqrt.svg', '2022-08-07T09:21:09', 3, 2);
@@ -81,6 +90,7 @@ SELECT * FROM information_schema.tables WHERE table_schema='T2T';
 SELECT * FROM Post;
 SELECT * FROM Interest;
 SELECT * FROM User;
+SELECT * FROM Following;
 SELECT * FROM ChatMessage;
 
 USE T2T;
