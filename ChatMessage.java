@@ -2,6 +2,7 @@ package eryu_CSCI201_GroupProject;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 
 public class ChatMessage {
 	private int messageID;
@@ -65,4 +66,15 @@ public class ChatMessage {
 	}
 }
 
-// TO DO: comparator
+//reference: https://www.geeksforgeeks.org/comparator-interface-java/
+class ChatMessageComparator implements Comparator<ChatMessage> {
+	public int compare(ChatMessage a, ChatMessage b) {
+		Timestamp a_messageTime = a.getTimestamp();
+		Timestamp b_messageTime = b.getTimestamp();
+		
+		// if a has a later messageTime, it should come first when sorting
+		if(a_messageTime.compareTo(b_messageTime) > 0) return -1;
+		else if(a_messageTime.compareTo(b_messageTime) < 0) return 1;
+		else return 0;
+	}
+}

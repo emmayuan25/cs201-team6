@@ -2,6 +2,7 @@ package eryu_CSCI201_GroupProject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -28,13 +29,20 @@ public class User {
 		User.connectionURL = url; // this should be the URL needed to connect to database
 	}
 	
-	// getter method for username
+	public int getUserID() {
+		return this.userID;
+	}
+	
 	public String getUsername() {
 		return this.username;
 	}
 	
+	public String getUserProfilePicture() {
+		return this.profilePicture;
+	}
+	
 	// ServerThread should send posts to client
-	public ArrayList<Post> displayPosts() {
+	public PostsList displayPosts() {
 		// prepare the query statement for fetchPosts
 		// get the posts made by the user and posts made by those who the user follows
 		// and the posts that match user's interests
@@ -52,8 +60,9 @@ public class User {
 		// sort the posts based on creation time; from most recent to least recent
 		query += ") order by p.time desc";
 		
-		ArrayList<Post> postList = fetchPostsHelper(query);
-		return postList;
+		ArrayList<Post> posts = fetchPostsHelper(query);
+		PostsList postsList = new PostsList(posts);
+		return postsList;
 	}
 	
 	// combines fetchPostByUser, fetchPostByInterest, and sortByTime
@@ -237,7 +246,7 @@ public class User {
 	}
 	
 	// the list of chats returned is ordered from most recent to least recent
-	public ArrayList<Chat> getCurrentChats() {
+	public ChatsList getCurrentChats() {
 		// prepare query statement
 		String queryUserInfo = "select userName, userImage from User where userID=?";
 		
@@ -247,79 +256,77 @@ public class User {
 		String queryGetMessagesReceived = "select c.messageID, c.fromUID, c.toUID, c.messageText, c.createdAt, u.userName, u.userImage from ChatMessage c, User u where c.toUID='" + this.userID + "' and c.fromID=u.userID order by c.fromUID, c.createdAt desc";
 		ArrayList<ChatMessage> messagesReceived = getChatMessagesHelper(queryGetMessagesReceived, queryUserInfo, "sender", this.username, this.profilePicture);
 		
-		// keep track of the chats we instantiated
-		// key = friendUserID, value = chat
-		HashMap<Integer, Chat> chats_map = new HashMap<Integer, Chat>();
+		// separate the messages into different chats
+		// key = friendUserID, value = list of chat messages
+		HashMap<Integer, ArrayList<ChatMessage>> messages_map = new HashMap<Integer, ArrayList<ChatMessage>>();
 		
-		// separate the chat messages by the chats
-		ArrayList<Chat> chat_list = new ArrayList<Chat>();
-		ArrayList<ChatMessage> message_list = new ArrayList<ChatMessage>();
-		for(int i=0; i<messagesSent.size(); i++) {
-			ChatMessage current_message = messagesSent.get(i);
-			message_list.add(current_message);
+		for(ChatMessage message : messagesSent) {
+			int receiverID = message.getReceiverID();
+			ArrayList<ChatMessage> messages_list = messages_map.get(receiverID);
 			
-			// if this element is the last one, or if the next element has a different receiverID, we know this is where chats change
-			if(i == messagesSent.size()-1 || messagesSent.get(i+1).getReceiverID() !=  current_message.getReceiverID()) {
-				int userID = this.userID;
-				int friendID = current_message.getReceiverID();
-				String username = this.username;
-				String friendUsername = current_message.getReceiverUsername();
-				String userProfilePicture = this.profilePicture;
-				String friendProfilePicture = current_message.getReceiverProfilePicture();
-				ArrayList<ChatMessage> messagesSentForCurrentChat = message_list;
-				ArrayList<ChatMessage> messagesReceivedForCurrentChat = null;
-				Timestamp lastMessageTime = message_list.get(0).getTimestamp();
-				Chat currentChat = new Chat(userID, friendID, username, friendUsername, userProfilePicture, friendProfilePicture, messagesSentForCurrentChat, messagesReceivedForCurrentChat, lastMessageTime);
-				chat_list.add(currentChat);
-				chats_map.put(friendID, currentChat);
-				message_list = new ArrayList<ChatMessage>();
+			// if the map does not contain the receiverID, create a new key-value pair
+			if(messages_list == null) {
+				messages_list = new ArrayList<ChatMessage>();
+				messages_list.add(message);
+				messages_map.put(receiverID, messages_list);
+			}
+			
+			// if the map contains the receiverID, updates the value
+			else {
+				messages_list.add(message);
 			}
 		}
 		
-		message_list = new ArrayList<ChatMessage>();
-		for(int i=0; i<messagesReceived.size(); i++) {
-			ChatMessage current_message = messagesReceived.get(i);
-			message_list.add(current_message);
+		for(ChatMessage message : messagesReceived) {
+			int senderID = message.getSenderID();
+			ArrayList<ChatMessage> messages_list = messages_map.get(senderID);
 			
-			// if this element is the last one, or if the next element has a different receiverID, we know this is where chats change
-			if(i == messagesReceived.size()-1 || messagesReceived.get(i+1).getSenderID() !=  current_message.getSenderID()) {
-				// check if a Chat object between the sender and the user already exists
-				Chat currentChat = chats_map.get(current_message.getSenderID());
-				// if the currentChat already exists, add messagesReceivedForCurrentChat
-				if(currentChat != null) {
-					// add messagesReceived to currentChat
-					ArrayList<ChatMessage> messagesReceivedForCurrentChat = message_list;
-					currentChat.setMessagesReceived(messagesReceivedForCurrentChat);
-					
-					// compare lastMessageTime
-					Timestamp lastMessageReceivedTime = message_list.get(0).getTimestamp();
-					Timestamp lastMessageSentTime = currentChat.getLastMessageTime();
-					// if lastMessagereceivedtime is later
-					if(lastMessageReceivedTime.compareTo(lastMessageSentTime) > 0) {
-						currentChat.setLastMessageTime(lastMessageReceivedTime);
-					}
-				}
-				
-				else {
-					int userID = this.userID;
-					int friendID = current_message.getSenderID();
-					String username = this.username;
-					String friendUsername = current_message.getSenderUsername();
-					String userProfilePicture = this.profilePicture;
-					String friendProfilePicture = current_message.getSenderProfilePicture();
-					ArrayList<ChatMessage> messagesSentForCurrentChat = null;
-					ArrayList<ChatMessage> messagesReceivedForCurrentChat = message_list;
-					Timestamp lastMessageTime = message_list.get(0).getTimestamp();
-					currentChat = new Chat(userID, friendID, username, friendUsername, userProfilePicture, friendProfilePicture, messagesSentForCurrentChat, messagesReceivedForCurrentChat, lastMessageTime);
-					chat_list.add(currentChat);
-					message_list = new ArrayList<ChatMessage>();
-				}	
+			// if the map does not contain the senderID, create a new key-value pair
+			if(messages_list == null) {
+				messages_list = new ArrayList<ChatMessage>();
+				messages_list.add(message);
+				messages_map.put(senderID, messages_list);
 			}
+			
+			// if the map contains the senderID, updates the value
+			else {
+				messages_list.add(message);
+			}
+		}
+		
+		// hold the list of chats
+		ArrayList<Chat> chats_list = new ArrayList<Chat>();
+		
+		// HashMap iterating reference: https://www.geeksforgeeks.org/how-to-iterate-hashmap-in-java/
+		for(Map.Entry<Integer, ArrayList<ChatMessage>> entry : messages_map.entrySet()) {
+			ArrayList<ChatMessage> messages_list = entry.getValue();
+			
+			// sort the messages from most recent to least recent
+			messages_list.sort(new ChatMessageComparator());
+			
+			// get information of the friend
+			ChatMessage message1 = messages_list.get(0);
+			
+			// if user is sending this message
+			if(message1.getSenderID() == this.userID) {
+				// create a Chat object and add to chats_list
+				Chat current_chat = new Chat(this.userID, message1.getReceiverID(), message1.getSenderUsername(), message1.getReceiverUsername(),
+									message1.getSenderProfilePicture(), message1.getReceiverProfilePicture(), messages_list, message1.getTimestamp());
+				chats_list.add(current_chat);
+			}
+			// if user is receiving this message
+			else {
+				// create a Chat object and add to chats_list
+				Chat current_chat = new Chat(this.userID, message1.getSenderID(), message1.getReceiverUsername(), message1.getSenderUsername(),
+									message1.getReceiverProfilePicture(), message1.getSenderProfilePicture(), messages_list, message1.getTimestamp());
+				chats_list.add(current_chat);
+			}	
 		}
 		
 		// the list of chats returned is ordered from most recent to least recent
-		chat_list.sort(new ChatComparator());
-		return chat_list;
+		chats_list.sort(new ChatComparator());
+		ChatsList chatsList = new ChatsList(chats_list);
+		return chatsList;
 	}
 	
 	// searchUserType lets the method know whether we are searching user info for the sender or the receiver

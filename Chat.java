@@ -5,8 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-import eryu_CSCI201_Assignment1.Datum;
-
 public class Chat {
 	private int userID;
 	private int friendID;
@@ -15,20 +13,18 @@ public class Chat {
 	private String userProfilePicture;
 	private String friendProfilePicture;
 	// ordered from most recent to least recent; contains messages sent by both sender and receiver
-	private ArrayList<ChatMessage> messagesSent;
-	private ArrayList<ChatMessage> messagesReceived;
+	private ArrayList<ChatMessage> messages;
 	private Timestamp lastMessageTime;
 	private SimpleDateFormat timeFormatter;
 	
-	public Chat(int userID, int friendID, String username, String friendUsername, String userProfilePicture, String friendProfilePicture, ArrayList<ChatMessage> messagesSent, ArrayList<ChatMessage> messagesReceived, Timestamp lastMessageTime) {
+	public Chat(int userID, int friendID, String username, String friendUsername, String userProfilePicture, String friendProfilePicture, ArrayList<ChatMessage> messages, Timestamp lastMessageTime) {
 		this.userID = userID;
 		this.friendID = friendID;
 		this.username = username;
 		this.friendUsername = friendUsername;
 		this.userProfilePicture = userProfilePicture;
 		this.friendProfilePicture = friendProfilePicture;
-		this.messagesSent = messagesSent;
-		this.messagesReceived = messagesReceived;
+		this.messages = messages;
 		this.lastMessageTime = lastMessageTime;
 		
 		// reference for SimpleDateFormat: https://docs.oracle.com/javase/tutorial/i18n/format/simpleDateFormat.html
@@ -61,18 +57,9 @@ public class Chat {
 	public String getFriendProfilePicture() {
 		return this.friendProfilePicture;
 	}
-	
-	public ArrayList<ChatMessage> getMessagesSent() {
-		return this.messagesSent;
-	}
-	
-	public ArrayList<ChatMessage> getMessagesReceived() {
-		return this.messagesReceived;
-	}
-	
-	// TO DO
-	public ArrayList<ChatMessage> getAllMessages() {
-		
+
+	public ArrayList<ChatMessage> getMessages() {
+		return this.messages;
 	}
 	
 	public Timestamp getLastMessageTime() {
@@ -84,12 +71,8 @@ public class Chat {
 		return latestAccessTimeString;
 	}
 	
-	public void setMessagesSent(ArrayList<ChatMessage> messagesSent) {
-		this.messagesSent = messagesSent;
-	}
-	
-	public void setMessagesReceived(ArrayList<ChatMessage> messagesReceived) {
-		this.messagesReceived = messagesReceived;
+	public void setMessages(ArrayList<ChatMessage> messages) {
+		this.messages = messages;
 	}
 	
 	public void setLastMessageTime(Timestamp lastMessageTime) {
