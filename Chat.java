@@ -2,7 +2,6 @@ package eryu_CSCI201_GroupProject;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Chat {
@@ -12,19 +11,21 @@ public class Chat {
 	private String friendUsername;
 	private String userProfilePicture;
 	private String friendProfilePicture;
-	// ordered from most recent to least recent; contains messages sent by both sender and receiver
-	private ArrayList<ChatMessage> messages;
+	
+	// update change: only store the most recent message
+	private String lastMessageText;
+	
 	private Timestamp lastMessageTime;
 	private SimpleDateFormat timeFormatter;
 	
-	public Chat(int userID, int friendID, String username, String friendUsername, String userProfilePicture, String friendProfilePicture, ArrayList<ChatMessage> messages, Timestamp lastMessageTime) {
+	public Chat(int userID, int friendID, String username, String friendUsername, String userProfilePicture, String friendProfilePicture, String lastMessageText, Timestamp lastMessageTime) {
 		this.userID = userID;
 		this.friendID = friendID;
 		this.username = username;
 		this.friendUsername = friendUsername;
 		this.userProfilePicture = userProfilePicture;
 		this.friendProfilePicture = friendProfilePicture;
-		this.messages = messages;
+		this.lastMessageText = lastMessageText;
 		this.lastMessageTime = lastMessageTime;
 		
 		// reference for SimpleDateFormat: https://docs.oracle.com/javase/tutorial/i18n/format/simpleDateFormat.html
@@ -57,9 +58,9 @@ public class Chat {
 	public String getFriendProfilePicture() {
 		return this.friendProfilePicture;
 	}
-
-	public ArrayList<ChatMessage> getMessages() {
-		return this.messages;
+	
+	public String getLastMessageText() {
+		return this.lastMessageText;
 	}
 	
 	public Timestamp getLastMessageTime() {
@@ -71,8 +72,8 @@ public class Chat {
 		return latestAccessTimeString;
 	}
 	
-	public void setMessages(ArrayList<ChatMessage> messages) {
-		this.messages = messages;
+	public void setLastMessageText(String lastMessageText) {
+		this.lastMessageText = lastMessageText;
 	}
 	
 	public void setLastMessageTime(Timestamp lastMessageTime) {

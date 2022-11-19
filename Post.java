@@ -13,14 +13,14 @@ public class Post {
 	private boolean edited;
 	private SimpleDateFormat timeFormatter;
 	
-	public Post(int postID, String postText, String postImage, Timestamp timestamp, String username, String profilePicture) {
+	public Post(int postID, String postText, String postImage, Timestamp timestamp, String username, String profilePicture, boolean edited) {
 		this.postID = postID;
 		this.postText = postText;
 		this.postImage = postImage;
 		this.timestamp = timestamp;
 		this.username = username;
 		this.profilePicture = profilePicture;
-		this.edited = false;
+		this.edited = edited;
 		
 		// reference for SimpleDateFormat: https://docs.oracle.com/javase/tutorial/i18n/format/simpleDateFormat.html
 		// and reference: https://www.geeksforgeeks.org/program-to-convert-milliseconds-to-a-date-format-in-java/

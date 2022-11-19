@@ -14,8 +14,8 @@ public class User {
 	private int userID;
 	private String username;
 	private String profilePicture;
-	private ArrayList<Integer> interestID;
-	private ArrayList<Integer> followingID;
+	private ArrayList<Integer> interestID; // maybe delete this?
+	private ArrayList<Integer> followingID; // maybe delete this?
 	private static String connectionURL;
 	
 	// constructor takes in arguments from ServerThread.createNewUser()
@@ -27,6 +27,16 @@ public class User {
 		this.interestID = interestID;
 		this.followingID = followingID;
 		User.connectionURL = url; // this should be the URL needed to connect to database
+	}
+	
+	public static User userLogin(String username, String password) {
+		// check validity of username
+		
+		// check validity of password
+		
+		// if both are successful, create a User object with correct userID, username, profilePicture
+		
+		// if not, return null
 	}
 	
 	public int getUserID() {
