@@ -1,6 +1,8 @@
 package teamAssignment;
 
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -28,6 +30,8 @@ public class Server {
 	
 	
 	//server constructor
+	//TODO Serverlet and Web socket and change vector to collection lsit
+	//open and close connection to table
 	public Server(int port) {
 		try {
 			ServerSocket ss= new ServerSocket(port);
@@ -36,6 +40,7 @@ public class Server {
 			this.URL= "jdbc:mysql://localhost/T2T?user=root&password=Cupcake1!";
 			while(true) {
 				Socket s = ss.accept();
+				System.out.println("Accepted connection");
 				br = new BufferedReader(new InputStreamReader(s.getInputStream()));
 				ServerThread st = new ServerThread(s, this);
 				serverThreads.add(st);
@@ -59,41 +64,53 @@ public class Server {
 	
 	
 	//TODO -> fix connection to front end, figure out how to return user class
-	public static User userAuthentication(String username, String password){
+	public User userAuthentication(String username, String password){
 	   
 	    try{
+	    	System.out.println("Username: "+ username + " Passowrd: "+ password);
 	    	st = conn.createStatement();
 	        rs= st.executeQuery("Select * from User where userName='"+ username+"'");
 	        //if now user name is located then it is an error
-	        int id;
+	        int userID;
 	        String userName = null;
 	        String pass;
+	        String userImage;
+	        int interestID;
+	        
         	while(rs.next()){
-        		id = rs.getInt("userID");
+        		userID = rs.getInt("userID");
         		userName = rs.getString("userName");
                 pass = rs.getString("password");
+                userImage = rs.getString("userImage");
+                interestID = rs.getInt("interestID");
                 
-                //if password does not exist
+            //if password does not exist
                if(pass ==null){
-                    System.out.println("Invalid username or password please try again.");
                     return null;
                 }
-            	//Invalid password entered
-                else if(pass.equals(pass)==false) {
-                
-                	System.out.println("Invalid username or password please try again.");
-                    return null;
-                }
-              //instatiate user and return
-                else {
-                	ArrayList<String> list = getInterestList(id);
-                	//TODO->following list, photo, and url
-                	user = new User(id, userName, null, list, null, URL);
+               
+            	//instantiate user
+                else if(pass.equals(password)== true) {
+                	System.out.println("Correct log in");
+                	
+                	ArrayList<String> list = getInterestList(interestID);
+                	for(String i: list) {
+                		System.out.println(i);
+                	}
+                	//TODO->following list
+                	user = new User(userID, userName, userImage, list, null, URL);
                 	return user;
+                	
+                }
+               
+             //Invalid password entered
+                else {
+                    return null;
                 }
             }
+        	
+        	//username not found in database
         	if(userName==null) {
-        		System.out.println("Invalid username or password please try again.");
                 return null;
             }
 	            
@@ -107,33 +124,50 @@ public class Server {
 	}
 	
 	
-//TODO get info from front end
-	public User createNewUser(){
-		String userName=null;
-		String password=null;
+//TODO get info from front end and fix interestID
+	synchronized public User createNewUser(String userName, String password, String userImage, ArrayList<String> interestList){
+	
 		int userID=-1;
-		System.out.println("Name: ");
+		int interestID = 0;
+	
+		
+	
 	    try {
-	    	//get into
-		    userName = br.readLine();
-		    System.out.println("Password: ");
-		    password = br.readLine();
-		    //TODO get interest
-		    
+	 
+		    //TODO get interest and followers
+		    System.out.println("Username: "+userName+" Password: "+ password+ "Image lin: " + userImage);
 		    st = conn.createStatement();
-		    //add user to USer Table
-		 	st.executeUpdate("INSERT INTO User(userName,password) " + "VALUES ('"+ userName +"', '"+ password+"')");
-		 	//TODO update interest id;
-		 	st.executeUpdate("SELECT * FROM User WHERE userName='"+ userName+"'");
+		  
+		    //add to interest table
+		    String listExecute = "INSERT INTO Interest(";
+		    for(int i=0; i<interestList.size()-1;i++) {
+		    	listExecute +=  interestList.get(i)+", ";
+		    }
+		    listExecute +=interestList.get(interestList.size()-1) +") VALUES(";
+		    for(int j=0; j<interestList.size()-1;j++) {
+		    	listExecute += "1, ";
+		    }
+		    listExecute += "1)";
+		    System.out.println("INSERT EXECUTION: "+ listExecute);
+		    
+		 	st.executeUpdate(listExecute);
+		 	rs= st.executeQuery("SELECT MAX(interestID) FROM Interest");
+		 	while(rs.next()) {
+		 		interestID=rs.getInt(1);
+		 	}
+		 	
+		 	//insert into user table
+		 	st.executeUpdate("INSERT INTO USER(userName,userImage,password,interestID) VALUES('"+userName+"', '"+userImage+"', '"+ password+"', '"+ interestID+"')" );
+		 	
+		 
+		 	rs= st.executeQuery("SELECT * FROM User WHERE userName='"+ userName+"'");
 		 	while(rs.next()){
 		 		userID = rs.getInt("userID");
 		 	}
-		 	//TODO fix the call below
-		 	user = new User(userID, userName, null, null, null, URL);
+		 	//TODO Need to do followers table
+		 	user = new User(userID, userName, userImage, interestList , null, URL);
 		 	return user;
 		 	
-		} catch (IOException e) {
-			System.out.println("IO exception in createNewUser() "+ e);
 		} catch (SQLException e) {
 			System.out.println("SQL exception in createNewUser() "+ e);
 		}
@@ -142,7 +176,7 @@ public class Server {
 	}
 	
 	
-	//done I believe
+	//TODO Chat and post table and followers table
 	public void deleteUser(User profile){
         try{
             st = conn.createStatement();
@@ -165,7 +199,7 @@ public class Server {
             
             //delete from interest
             psmt = conn.prepareStatement("DELETE FROM Interest where interestID = ?");
-            psmt.setString(1, userID);
+            psmt.setString(1, interestID);
             psmt.executeUpdate();
             
             //delete from post
@@ -184,35 +218,44 @@ public class Server {
         }
     }
     
-    public List<String> searchKeyword(String name){
+	//get list of search results
+    public List<String> searchKeyword(String name, Integer myID){
         List<String> returnUser = new ArrayList<String>();
         try{
            
             st = conn.createStatement();
             
             //get results by username
-            rs= st.executeQuery("Select * from User where userName='"+ name+"'");
+            System.out.println("checking to find username");
+            rs= st.executeQuery("Select * from User WHERE userName='"+ name+"'");
+            System.out.println("User SQL okay");
                 while(rs.next()){
                 	int userID = rs.getInt("userID");
                     String username = rs.getString("userName");
                     //TODO get rest of information line interest ID
-                    
+                    System.out.println(userID);
                    
                     returnUser.add(username);
                 }
   
                 //check the users with similar interest
-                rs= st.executeQuery("Select * from Interest where "+ name + "=1");
+                System.out.println("Checking to find interest");
+                rs= st.executeQuery("SELECT * FROM Interest WHERE "+ name + "=1");
+                System.out.println("Interest table okay");
                 List<Integer> idList= new ArrayList<Integer>();
 	            while(rs.next()){
 	                	int ID = rs.getInt("interestID");
+	                	System.out.println(ID);
 	                	idList.add(ID);
 	            }
 	            for(Integer i: idList) {
-	            	ResultSet rs2 = st.executeQuery("SELECT userName FROM User WHERE userID= " + i);
+	            	ResultSet rs2 = st.executeQuery("SELECT userName FROM User WHERE interestID= "+ i);
                 	while(rs2.next()) {
-                		String username = rs2.getString("userName");
-	                	returnUser.add(username);
+                		if(i!=myID) {
+                			String username = rs2.getString("userName");
+                    		System.out.println(username);
+    	                	returnUser.add(username);
+                		}
                 	}
 				}
             
@@ -224,6 +267,7 @@ public class Server {
         
     }
     
+    //get list of all interest
     public static ArrayList<String> getInterestList(int id) {
     	ArrayList<String> interestList = new ArrayList<String>();
     	try {
@@ -276,6 +320,16 @@ public class Server {
 		}
     	return interestList;
     }
+    
+    public void newMessage(int fromUID, int toUID, String messageText) {
+    	 try {
+			st = conn.createStatement();
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+			LocalDateTime now = LocalDateTime.now();   
+			st.executeUpdate("INSERT INTO ChatMessage(fromUID,toUID,messageText,createdAt) VALUES('"+fromUID+"', '"+ toUID+"', '"+messageText+"', '"+dtf.format(now)+"')");
+		} catch (SQLException e) {
+			System.out.println ("SQLException: " + e.getMessage());
+		}
+    }
 
 }
-
