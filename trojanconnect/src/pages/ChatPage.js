@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import ContactList from '../components/ContactList';
 import Chatbox from '../components/ChatBox'
 import Footer from '../components/Footer'
@@ -27,11 +27,13 @@ const ChatPage = () => {
         }
     ];
 
+    const [selectedChat, setSelectedChat] = useState(null);
+
     return (
         <>
             <div className='flex flex-row'>
-                <ContactList names={contactHashmap}/>
-                <Chatbox />
+                <ContactList names={contactHashmap} selectedChat={selectedChat} setSelectedChat={setSelectedChat}/>
+                <Chatbox names={contactHashmap} selectedChat={selectedChat}/>
             </div>
             <Footer />
         </>
