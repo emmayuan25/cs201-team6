@@ -18,7 +18,7 @@ function Footer() {
             <a href='/message'>
                 <img className='w-8 justify-evenly flex mr-2' src={chatIcon} alt="user" />
             </a>
-            <a href='/'>
+            <a href='/profile'>
                 <img className='w-8 justify-evenly flex mr-2' src={userIcon} alt="user" />
             </a>
             
