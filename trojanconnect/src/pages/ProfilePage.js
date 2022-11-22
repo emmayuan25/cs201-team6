@@ -3,14 +3,18 @@ import React, {useState, useEffect} from 'react';
 import Footer from '../components/Footer';
 import Delete from '../assets/delete.png';
 
+const interestlist = ["cs201", "cs270", "cs104"];
+
 const ProfilePage = (props) => {
     // const username = props.username;
     const username = "joe";
     // const interests = props.interests;
-    const interestlist = ["cs201", "cs270", "cs104"];
+    // const interestlist = ["cs201", "cs270", "cs104"];
 
     const [currentName, setCurrentName] = useState(username);
+    const [tempInterest, setTempInterest] = useState("");
     const [newInterest, setNewInterest] = useState("");
+    
 
     const handleChange = (e) => {
         setCurrentName(e.target.value);
@@ -19,12 +23,15 @@ const ProfilePage = (props) => {
 
     const handleAddInterest = (e) => {
         console.log(e.target.value);
-        setNewInterest(e.target.value);
+        setTempInterest(e.target.value);
     }
 
     const addToInterestList = () => {
-        interestlist.push(newInterest);
-        setNewInterest("");
+        // setNewInterest(tempInterest)
+        
+        interestlist.push(tempInterest)
+        console.log(interestlist)
+        setTempInterest("");
     }
 
     const deleteInterest = (item) => {
@@ -44,7 +51,8 @@ const ProfilePage = (props) => {
                         className='h-10 w-52 rounded ml-4 bg-grey px-2'
                         type="text" 
                         value={currentName} 
-                        onChange={handleChange}
+                        onChange={(e) => {e.preventDefault();
+                            handleChange(e)}}
                     />
                     <label className='font-bold w-52 text-left pl-2 mt-6'>
                     Add Interests
@@ -52,14 +60,16 @@ const ProfilePage = (props) => {
                     <input 
                         className='h-10 w-52 rounded ml-4 bg-grey px-2'
                         type="text" 
+                        value={tempInterest}
                         onChange={(e) => handleAddInterest(e)}
                     />
                     <button 
-                        onClick={addToInterestList}
+                        onClick={(e) => {e.preventDefault();
+                            addToInterestList()}}
                         className='flex'
                     >+</button>
-                    {interestlist.map((interest) => 
-                        <div 
+                    {interestlist.map((interest, index) => 
+                        <div key={index}
                             className='flex text-black text-left pl-4 py-1 bg-white  w-52 ml-4 rounded'
                         >
                             {interest}
