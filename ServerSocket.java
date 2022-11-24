@@ -64,14 +64,10 @@ public class ServerSocket {
 	@OnError
 	public void error(Throwable error) {
 		// inform the clients that an error has occurred
-		try {
-			for(Session s : sessionList) {
-				// getBasicRemote() is for synchronous communication
-				// getAsyncRemote() is for asynchronous communication
-				s.getBasicRemote().sendText("error");
-			}
-		} catch (IOException ioe) {
-			System.out.println("ioe: " + ioe.getMessage());
+		for(Session s : sessionList) {
+			// getBasicRemote() is for synchronous communication
+			// getAsyncRemote() is for asynchronous communication
+			s.getAsyncRemote().sendText("error");
 		}
 	}
 }
