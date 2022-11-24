@@ -46,11 +46,14 @@ public class ServerSocket {
 		
 		// send chatMessage to every session except where the message came from
 		// the front end should decide whether the message is relevant for its user
-		for(Session s : sessionList) {
-			if(s != session) {
-				// getBasicRemote() is for synchronous communication
-				// getAsyncRemote() is for asynchronous communication
-				s.getAsyncRemote().sendText(messageInJSON);
+		// synchronized to prevent adding or removing sessions when iterating through sessionList
+		synchronized(sessionList) {
+			for(Session s : sessionList) {
+				if(s != session) {
+					// getBasicRemote() is for synchronous communication
+					// getAsyncRemote() is for asynchronous communication
+					s.getAsyncRemote().sendText(messageInJSON);
+				}
 			}
 		}
 	}
