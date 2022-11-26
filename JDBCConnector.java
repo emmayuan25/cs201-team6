@@ -1,13 +1,19 @@
 package team;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 
 
@@ -354,7 +360,7 @@ public class JDBCConnector {
     	Connection conn = null;
 		Statement st = null;  
 		ResultSet rs = null;
-		 int interestID = 0;
+		int interestID = 0;
 		try {
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=Cupcake1!");
 			
@@ -404,8 +410,100 @@ public class JDBCConnector {
 		return interestID;
 		
     }
+   
+	//get list of all chats
+	synchronized public static Set<Integer> getChatList(int id) {
+    Set<Integer> chatlist = new HashSet<Integer>();
+    Set<Integer> chatOther = new HashSet<Integer>();
 
-
-
-    
-}
+   	Connection conn = null;
+	Statement st = null;  
+	ResultSet rs = null;
+   	
+   	try {
+   		conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=Cupcake1!");
+		rs=st.executeQuery("SELECT * FROM ChatMessage WHERE fromUID ="+id );
+		while(rs.next()) {
+			int messageID = rs.getInt("messageID");
+			int toUID = rs.getInt("toUID");
+			chatlist.add(messageID);
+			chatOther.add(toUID);
+				               
+		}
+		rs=st.executeQuery("SELECT * FROM ChatMessage WHERE toUID ="+id );
+		while(rs.next()) {
+			int messageID = rs.getInt("messageID");
+			int fromUID = rs.getInt("fromUID");
+			chatlist.add(messageID);
+			chatOther.add(fromUID);
+				               
+		}
+	} catch (SQLException e) {
+		System.out.println("SQL exception in Server getChatList() "+ e);
+	}finally {
+    	try {
+    		if(st!=null) {
+	    		st.close();
+	    	}
+	    	if(conn!=null) {
+	   			conn.close();
+	   		}
+	   		if(rs !=null) {
+	   			conn.close();
+    		}
+	    } catch(SQLException sqle) {
+	   		System.out.println("sqle: "+ sqle.getMessage());
+	   	}
+    }
+   	return chatOther;
+   	}
+	
+	//get list of all chats b/w 2 people ordered by time
+	//id1 is our identity, id2 is the person who's text we want to pull up
+	synchronized public static Map<Timestamp, Integer> getMessageList(int id1, int id2) { 
+		Map<Timestamp, Integer> messagelist = new HashMap<Timestamp, Integer>();
+		Map<Timestamp, Integer> tm = new TreeMap<Timestamp, Integer>();
+    	Connection conn = null;
+		Statement st = null;  
+		ResultSet rs = null;
+    	
+    	try {
+    		conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=Cupcake1!");
+    		rs=st.executeQuery("SELECT * FROM ChatMessage WHERE fromUID ="+id1);
+    		while(rs.next()) {
+    			int toUID = rs.getInt("toUID");
+    			int fromUID = rs.getInt("fromUID");
+    			if (toUID == id2) {
+    				Timestamp createdAt = rs.getTimestamp("createdAt");
+    				messagelist.put(createdAt, fromUID);
+    			}              
+    		}
+    		rs=st.executeQuery("SELECT * FROM ChatMessage WHERE toUID ="+id1);
+    		while(rs.next()) {
+    			int fromUID = rs.getInt("fromUID");
+    			if (fromUID == id2) {
+    				Timestamp createdAt = rs.getTimestamp("createdAt");
+        			messagelist.put(createdAt, fromUID);
+    			}
+			}
+    		Map<Timestamp, Integer> treeMap = new TreeMap<Timestamp, Integer>((Comparator<? super Timestamp>) messagelist);
+    		tm = treeMap;
+    	} catch (SQLException e) {
+			System.out.println("SQL exception in Server getInterestList() "+ e);
+		}finally {
+	    	try {
+	    		if(st!=null) {
+	    			st.close();
+	    		}
+	    		if(conn!=null) {
+	    			conn.close();
+	    		}
+	    		if(rs !=null) {
+	    			conn.close();
+	    		}
+	    	} catch(SQLException sqle) {
+	    		System.out.println("sqle: "+ sqle.getMessage());
+	    	}
+	    }
+    	return tm;
+    }
