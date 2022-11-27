@@ -1,55 +1,55 @@
+package team;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+
 public class User {
 	private int userID;
 	private String username;
-	private String password;
 	private String profilePicture;
-	private String[] interests;
+	private int interestID;
+//	private ArrayList<Integer> interestID; // maybe delete this?
+//	private ArrayList<Integer> followingID; // maybe delete this?
+//	private static String connectionURL;
 	
-	public User(int userID, String username, String password, String profilePicture, String[] interests) {
-		this.userID = userID;
-		this.username = username;
-		this.password = password;
-		this.profilePicture = profilePicture;
-		this.interests = interests;
+	
+	public void setUserID(int id) {
+		this.userID=id;
 	}
 	
 	public int getUserID() {
-		return this.userID;
-	}
-	
-	public void setUserID(int userID) {
-		this.userID = userID;
-	}
-	
-	public String getUsername() {
-		return this.username;
+		return userID;
 	}
 	
 	public void setUsername(String username) {
-		this.username = username;
+		this.username=username;
 	}
 	
-	public String getPassword() {
-		return this.password;
+	public String getUsername() {
+		return username;
 	}
 	
-	public void setPassword(String password) {
-		this.password = password;
+	public void setProfilePicture(String image) {
+		this.profilePicture=image;
 	}
 	
 	public String getProfilePicture() {
-		return this.profilePicture;
+		return profilePicture;
 	}
 	
-	public void setProfilePicture(String profilePicture) {
-		this.profilePicture = profilePicture;
+	public void setInterestID(int id) {
+		this.interestID=id;
 	}
 	
-	public String[] getInterests() {
-		return this.interests;
+	public int getInterestID() {
+		return interestID;
 	}
-	
-	public void setInterests(String[] interests) {
-		this.interests = interests;
-	}
+
 }
