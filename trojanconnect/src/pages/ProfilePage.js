@@ -10,7 +10,10 @@ const interestlist = ["cs201", "cs270", "cs104", "viterbi", "computer science",
 const userInterests = [true, true, false, true, true,
     true, false, false];
 
-
+const profiles = [
+    "http://pm1.narvii.com/6246/715984500f1c060fd0487b4831921e6b9b0498fe_00.jpg",
+    "https://i.pinimg.com/originals/fb/15/f0/fb15f07243e81de329a17151300b5e99.png"
+]
 /*
 Display checkboxes for all possible interests.
 
@@ -23,13 +26,18 @@ const ProfilePage = (props) => {
     // const interestlist = ["cs201", "cs270", "cs104"];
 
     const [currentName, setCurrentName] = useState(username);
-    const [tempInterest, setTempInterest] = useState("");
+    const [profile, setProfile] = useState(profiles[0]);
     const [interestFlip, setInterestFlip] = useState("");
     
 
     const handleChange = (e) => {
         setCurrentName(e.target.value);
         console.log(currentName);
+    }
+
+    const handleProfileChange = (e) => {
+        setProfile(e.target.value);
+        console.log(profile);
     }
 
     const changeInterest = (item) => {
@@ -55,6 +63,19 @@ const ProfilePage = (props) => {
                         onChange={(e) => {e.preventDefault();
                             handleChange(e)}}
                     />
+                    <label className='mt-6 font-bold w-52 text-left pl-2'>
+                    Profile Picture
+                    </label>
+                    <input 
+                        className='h-10 w-52 rounded ml-4 bg-grey px-2'
+                        type="text" 
+                        value={profile} 
+                        onChange={(e) => {e.preventDefault();
+                            handleProfileChange(e)}}
+                    />
+                    <figure className="image m-4">
+                        <img className='is-rounded' src={profile}/>
+                    </figure>
                     <label className='font-bold w-52 text-left pl-2 mt-6'>
                     Interests
                     </label>

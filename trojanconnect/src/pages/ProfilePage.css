@@ -1,3 +1,9 @@
 .selected-box{
     background-color: rgb(160, 255, 185);
 }
+
+img {
+    max-width: 128px;
+    height: auto;
+    border-radius: 100%;
+}
