@@ -47,7 +47,7 @@ public class RegisterServlet extends HttpServlet{
 				String destPage ="";
 				
 				if(user!=null) {
-					HttpSession session = request.getSession();
+					HttpSession session = request.getSession(true);
 					session.setAttribute("user", user);
 					//TODO get home page jsp
 					destPage =""; 
