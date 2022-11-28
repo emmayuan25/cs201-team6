@@ -48,6 +48,8 @@ function SearchBar(props) {
 
     const search = require('../assets/search.png');
 
+    const options = ['Person 1','Person 2','Person 3','Person 4','Person 5'];
+
     return (
         <div className='w-1/3 h-screen bg-red'>
             <div style={bufferStyle}></div>
