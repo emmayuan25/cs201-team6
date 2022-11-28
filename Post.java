@@ -1,4 +1,4 @@
-package eryu_CSCI201_GroupProject;
+package team;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -12,48 +12,78 @@ public class Post {
 	private String profilePicture;
 	private boolean edited;
 	private SimpleDateFormat timeFormatter;
+	private String interest;
+
 	
-	public Post(int postID, String postText, String postImage, Timestamp timestamp, String username, String profilePicture, boolean edited) {
-		this.postID = postID;
-		this.postText = postText;
-		this.postImage = postImage;
-		this.timestamp = timestamp;
-		this.username = username;
-		this.profilePicture = profilePicture;
-		this.edited = edited;
-		
-		// reference for SimpleDateFormat: https://docs.oracle.com/javase/tutorial/i18n/format/simpleDateFormat.html
-		// and reference: https://www.geeksforgeeks.org/program-to-convert-milliseconds-to-a-date-format-in-java/
-		// and reference: https://www.javatpoint.com/java-get-current-date
+	public Post() {
 		String timePattern = "yyyy-MM-dd HH:mm:ss";
 		this.timeFormatter = new SimpleDateFormat(timePattern);
 	}
 	public int getPostID() {
-		return this.postID;
+		return postID;
 	}
+	
+	public void setPostID(int id) {
+		this.postID=id;
+	}
+	
 	public String getPostText() {
-		return this.postText;
+		return postText;
 	}
+	
+	public void setPostText(String text) {
+		this.postText=text;
+	}
+	
 	public String getPostImage() {
-		return this.postImage;
+		return postImage;
 	}
+	
+	public void setPostImage(String image) {
+		this.postImage=image;
+	}
+	
 	public String getUsername() {
-		return this.username;
+		return username;
 	}
+	
+	public void setUsername(String user) {
+		this.username=user;
+	}
+	
 	public String getProfilePicture() {
-		return this.profilePicture;
+		return profilePicture;
 	}
+	
+	public void setProfilePicture(String pic) {
+		this.profilePicture= pic;
+	}
+	
 	public Timestamp getTimestamp() {
-		return this.timestamp;
+		return timestamp;
 	}
+	
+	public void setTimeStamp(Timestamp time) {
+		this.timestamp=time;
+	}
+	
+	public String getInterest() {
+		return interest;
+	}
+	
+	public void setInterest(String interest) {
+		this.interest=interest;
+	}
+	
 	public String getTimestampString() {
 		String timestampString = this.timeFormatter.format(this.timestamp);
 		return timestampString;
 	}
 	public boolean getEdited() {
-		return this.edited;
+		return edited;
 	}
 	public void setEdited(boolean edited) {
 		this.edited = edited;
 	}
 }
+
