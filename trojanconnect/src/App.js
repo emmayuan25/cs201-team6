@@ -7,6 +7,8 @@ import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
 import SignInPage from './pages/SignInPage';
 import ProfilePage from './pages/ProfilePage';
+import SignUpPage from './pages/SignUpPage';
+import GuestPage from './pages/GuestPage';
 
 function App() {
   const [isLoggedin, setIsLoggedin] = useState(false);
@@ -22,6 +24,8 @@ function App() {
           <Route exact path='/home' element={<HomePage />} />
           <Route exact path='/search' element={<SearchPage />} />
           <Route exact path='/message' element={<ChatPage />} />
+          <Route exact path='/SignUp' element={<SignUpPage />} />
+          <Route exact path='/Guest' element={<GuestPage />} />
           <Route exact path='/profile' element={
               // isLoggedin ? 
               <ProfilePage /> 
