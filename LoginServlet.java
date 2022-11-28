@@ -14,33 +14,40 @@ import javax.servlet.http.HttpSession;
 public class LoginServlet extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	
+	public LoginServlet() {
+		super();
+	}
+	
 	//login
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 		
 		try{
-		
 			//TODO change names
 			String username = request.getParameter("username");
 			String password = request.getParameter("password");
 			
-			//TODO decide if the next line is necesary???
-//			JDBCConnector connect = new JDBCConnector();
+
 			
 			User user = JDBCConnector.userAuthentication(username, password);
+			
+			 
 			
 			//TODO get login JS page
 			String destPage ="";
 			
 			if(user!=null) {
+				
 				HttpSession session = request.getSession();
 				session.setAttribute("user", user);
 				//TODO get home page jsp
 				destPage ="";
 			}else {
+				
 				String message = "Invalid email/password";
 				request.setAttribute("message", message);
 			}
 			
+			//TODO might need to user response.sendRedirect()
 			RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);
 			dispatcher.forward(request, response);
 			
