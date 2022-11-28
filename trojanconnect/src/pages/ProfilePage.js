@@ -5,6 +5,12 @@ import Delete from '../assets/delete.png';
 
 const interestlist = ["cs201", "cs270", "cs104"];
 
+
+/*
+Display checkboxes for all possible interests.
+
+Add button to sign out, delete profile.
+*/
 const ProfilePage = (props) => {
     // const username = props.username;
     const username = "joe";
