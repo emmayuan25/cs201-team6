@@ -3,7 +3,12 @@ import React, {useState, useEffect} from 'react';
 import Footer from '../components/Footer';
 import Delete from '../assets/delete.png';
 
-const interestlist = ["cs201", "cs270", "cs104"];
+import './ProfilePage.css'
+
+const interestlist = ["cs201", "cs270", "cs104", "viterbi", "computer science",
+"engineering", "scope", "math408"];
+const userInterests = [true, true, false, true, true,
+    true, false, false];
 
 
 /*
@@ -19,7 +24,7 @@ const ProfilePage = (props) => {
 
     const [currentName, setCurrentName] = useState(username);
     const [tempInterest, setTempInterest] = useState("");
-    const [newInterest, setNewInterest] = useState("");
+    const [interestFlip, setInterestFlip] = useState("");
     
 
     const handleChange = (e) => {
@@ -40,8 +45,12 @@ const ProfilePage = (props) => {
         setTempInterest("");
     }
 
-    const deleteInterest = (item) => {
+    const changeInterest = (item) => {
         // console.log(item.value);
+        console.log(item);
+        let ind = interestlist.findIndex((element) => element === item);
+        userInterests[ind] = !userInterests[ind];
+        setInterestFlip(!interestFlip);
     };
 
 
@@ -61,9 +70,9 @@ const ProfilePage = (props) => {
                             handleChange(e)}}
                     />
                     <label className='font-bold w-52 text-left pl-2 mt-6'>
-                    Add Interests
+                    Interests
                     </label>
-                    <input 
+                    {/* <input 
                         className='h-10 w-52 rounded ml-4 bg-grey px-2'
                         type="text" 
                         value={tempInterest}
@@ -73,19 +82,29 @@ const ProfilePage = (props) => {
                         onClick={(e) => {e.preventDefault();
                             addToInterestList()}}
                         className='flex'
-                    >+</button>
-                    {interestlist.map((interest, index) => 
-                        <div key={index}
-                            className='flex text-black text-left pl-4 py-1 bg-white  w-52 ml-4 rounded'
-                        >
-                            {interest}
-                            <img 
-                                src={Delete}
-                                alt="delete" 
-                                onClick={deleteInterest(interest)}
-                                className='flex cursor-pointer pl-24'    
-                            />
-                        </div>
+                    >+</button> */}
+                    {interestlist.map((interest, index) => {
+                        if(userInterests.at(index)){
+                            console.log("T");
+                            return (<div key={index}
+                                className='text-black pl-4 py-1 selected-box 
+                                w-52 ml-4 rounded'
+                                onClick={() => changeInterest(interest)}
+                            >
+                                {interest}
+
+                            </div>);
+                        }else{
+                            console.log("F");
+                            return (<div key={index}
+                                className='flex text-black text-left pl-4 py-1 bg-white  w-52 ml-4 rounded'
+                                onClick={() => changeInterest(interest)}
+                            >
+                                {interest}
+                            </div>);
+                        }
+                    }
+                        
                     )}
                 </form>
             </div>
