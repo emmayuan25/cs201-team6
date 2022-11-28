@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, Redirect } from 'react';
 import SearchBar from '../components/SearchBar';
-import SearchPageBorder from '../components/SearchPageBorder';
 import Footer from '../components/Footer';
 import SearchResult from '../components/SearchResult';
 
@@ -30,31 +29,49 @@ const SearchPage = () => {
     // useEffect(() => {
     //     setIsLoaded(true);        
     // }, [results]);
+
+    const toChat = (userID) => {
+        localStorage.setItem("chatID", userID);
+    }
+
     return (
         <>
-            <div className='flex flex-row'>
-                <SearchPageBorder></SearchPageBorder>
-                <form onSubmit={(e) => {
+            <div className='justify-center bg-red py-8 mx-auto items-center flex flex-col h-screen'>
+                <form 
+                    className='h-24 w-1/3 items-center'
+                    onSubmit={(e) => {
                     console.log("SUBMITTED")
                     e.preventDefault();
                     getUsers(search);
                     setSearch("")
-                }}>
-                    <input type='text' placeholder='Search' value={search}
+                    }}
+                >
+                <input
+                    className='h-10 w-2/3 rounded px-2 border-2'
+                    type='text' placeholder='Search for user' value={search}
                     onChange={(e) => setSearch(e.target.value)}/>
-                    <input type='submit' value='Submit'/>
+                <input 
+                    type='submit' 
+                    value='Submit'
+                    className='bg-red border-2 h-10 px-2 rounded font-bold cursor-pointer'
+                />
                 </form>
-                <SearchBar></SearchBar>
+                {/* <SearchBar /> */}
                 {results.map((user) => (
-                    <div key={user.uid} onClick={() => {
+                    <div
+                        className='bg-white rounded-lg w-72 h-16 content-center flex flex-row border-2' 
+                        key={user.uid} onClick={() => {
                         console.log(user.uid);
                     }}>
-                        <img src={user.profile}/>
-                        <div> {user.name}</div>
-                    <SearchResult profile={user.profile}/>
+                        <img className='w-16' src={user.profile} />
+                        <a href='/message' 
+                            className='w-36 justify-center m-auto text-xl cursor-pointer'
+                            onClick={toChat(user.uid)}
+                        >
+                            {user.name}
+                        </a>
                     </div>
                 ))}
-                <SearchPageBorder></SearchPageBorder>
             </div>
             <Footer />
         </>
