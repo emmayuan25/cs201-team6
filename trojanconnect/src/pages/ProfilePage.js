@@ -32,22 +32,8 @@ const ProfilePage = (props) => {
         console.log(currentName);
     }
 
-    const handleAddInterest = (e) => {
-        console.log(e.target.value);
-        setTempInterest(e.target.value);
-    }
-
-    const addToInterestList = () => {
-        // setNewInterest(tempInterest)
-        
-        interestlist.push(tempInterest)
-        console.log(interestlist)
-        setTempInterest("");
-    }
-
     const changeInterest = (item) => {
         // console.log(item.value);
-        console.log(item);
         let ind = interestlist.findIndex((element) => element === item);
         userInterests[ind] = !userInterests[ind];
         setInterestFlip(!interestFlip);
@@ -72,22 +58,10 @@ const ProfilePage = (props) => {
                     <label className='font-bold w-52 text-left pl-2 mt-6'>
                     Interests
                     </label>
-                    {/* <input 
-                        className='h-10 w-52 rounded ml-4 bg-grey px-2'
-                        type="text" 
-                        value={tempInterest}
-                        onChange={(e) => handleAddInterest(e)}
-                    />
-                    <button 
-                        onClick={(e) => {e.preventDefault();
-                            addToInterestList()}}
-                        className='flex'
-                    >+</button> */}
                     {interestlist.map((interest, index) => {
                         if(userInterests.at(index)){
-                            console.log("T");
                             return (<div key={index}
-                                className='text-black pl-4 py-1 selected-box 
+                                className='text-black text-left pl-4 py-1 selected-box 
                                 w-52 ml-4 rounded'
                                 onClick={() => changeInterest(interest)}
                             >
@@ -95,9 +69,8 @@ const ProfilePage = (props) => {
 
                             </div>);
                         }else{
-                            console.log("F");
                             return (<div key={index}
-                                className='flex text-black text-left pl-4 py-1 bg-white  w-52 ml-4 rounded'
+                                className='text-black text-left pl-4 py-1 bg-white  w-52 ml-4 rounded'
                                 onClick={() => changeInterest(interest)}
                             >
                                 {interest}
