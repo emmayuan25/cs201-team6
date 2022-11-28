@@ -19,9 +19,9 @@ function SearchResult(props) {
       };
 
     const dropDownStyle = {
-        height: '70px',
+        height: '10vh',
+        width: '32vw',
         backgroundColor: 'white',
-
     }
 
     const dropTextStyle = {
