@@ -35,7 +35,9 @@ public class RegisterServlet extends HttpServlet{
 			String[] interest = request.getParameterValues("interest");
 			List<String> interestList = Collections.synchronizedList(new ArrayList<>());
 		
-			
+			for(String i: interest){
+				interestList.add(i);
+			}
 			
 			User user = (User) JDBCConnector.createNewUser(username, password, userImage, interestList);
 			
