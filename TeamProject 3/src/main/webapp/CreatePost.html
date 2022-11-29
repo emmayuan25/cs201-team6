@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>Create Post</h1>
+	<form action="CreatePostServlet" name="createForm" method="POST">
+		<lable for="image">image:<lable>
+		<input type="text" id="image" name="image">
+		
+		<br>
+		<lable for="text">text:<lable>
+		<input type="text" id="text" name="text">
+		
+		<br>
+    	<label for="interest">Interest:</label>
+   		<select id="interest" name="interestList">
+   			<option value="marshall">Marshall</option>
+   			<option value="viterbi">Viterbi</option>
+   			<option value="dornsife">Dornsife</option>
+   			<option value="marshall">Marshall</option>
+   			<option value="computerScience">Computer Science</option>
+   			<option value="csba">CSBA</option>
+   			<option value="businessAdmin">Business Administration</option>
+   			<option value="csgames">CS Games</option>
+   			<option value="cais">CAIS</option>
+   			<option value="athenaHacks">Athena Hacks</option>
+   			<option value="scope">Scope</option>
+   		</select> 
+   		<br>
+   		<input type="submit"> 	
+   			
+	</form>
+	
+	<li><a href="HomePage.jsp">Home Page</a></li>
+</body>
+</html>
