@@ -49,7 +49,7 @@ public class RegisterServlet extends HttpServlet{
 				if(user!=null) {
 					HttpSession session = request.getSession(true);
 					session.setAttribute("user", user);
-					destPage ="HomePage.jsp"; 
+					destPage ="HomePage.html"; 
 				}else {
 					//TODO send response message
 					String message = "Username already taken";
@@ -68,3 +68,4 @@ public class RegisterServlet extends HttpServlet{
 		
 	
 }
+
