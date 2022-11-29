@@ -37,7 +37,7 @@ public class LoginServlet extends HttpServlet{
 				
 				HttpSession session = request.getSession(true);
 				session.setAttribute("user", user);
-				destPage ="HomePage.jsp";
+				destPage ="HomePage.html";
 			}else {
 				
 				//TODO JS needs to send out error message
