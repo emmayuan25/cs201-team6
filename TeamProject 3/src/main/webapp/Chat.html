@@ -1,10 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Chat</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script type="text/javascript">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./CSS/chat.css" />
+    <title>Chat</title>
+	
+</head>
+<body>
+	<!-- <form action="DisplayChatsServlet" method="POST">
+		<h1>Display current chats</h1>
+		<input type="submit">
+	</form>
+	<div id='result' class='result'></div> -->
+	
+	<div class="page">
+        <div id="chat-container">
+            <div id="chat-list"></div>
+            <div id="chat-box"></div>
+        </div>
+        <div class="footer">
+            <a href="/"><img class="footer-icon" src="./assets/home-icon.png" alt="home"/></a>
+            <a href="/"><img class="footer-icon" src="./assets/search-icon.png" alt="search"/></a>
+            <a href=""><img class="footer-icon" src="./assets/chat-icon.png" alt="chat"/></a>
+            <a href="/"><img class="footer-icon" src="./assets/user.png" alt="profile"/></a>
+        </div>
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
 		$(document).ready(function(){
 			$('#display').click(function(){
 				$.ajax({
@@ -29,21 +55,16 @@
 
 		});
 	</script>
-</head>
-<body>
-	form action="DisplayChatsServlet" method="POST">
-		<h1>Display current chats</h1>
-		<input type="submit">
-	</form>
-	<div id='result' class='result'></div>
-	
-	<h1>Navigation</h1>
-		<ul>
-			<li><a href="HomePage.html">Home</a></li>
-			<li><a href="Search.html">Search</a></li>
-			<li><a href="Chat.html">Chat</a></li>
-			<li><a href="Profile.html">Profile</a></li>
-			<li><a href="CreatePost.html">Profile</a></li>
-		</ul>
+    <script src="./Javascript/chat.js"></script>
+    <script type="text/javascript">
+        // $('.contact-name').click(function(e){
+        //     $('.contact-name').removeClass('active').filter(e).toggleClass('active');
+        //     console.log(this.innerHTML);
+        // });
+        function selectChat(e, id) {
+            $('.contact-box').removeClass('active').filter(e).toggleClass('active');
+            console.log(id);
+        };
+    </script>
 </body>
 </html>
