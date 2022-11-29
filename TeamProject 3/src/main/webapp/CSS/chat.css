@@ -41,7 +41,7 @@ body {
 
 #chat-box {
     background-color: #990000;
-    width: 85vw;
+    width: 83vw;
     height: 90vh;
     scroll-behavior: smooth;
     overflow-y: auto;
@@ -107,4 +107,24 @@ body {
 
 .active {
     background-color: #FFCC00;
+}
+
+#send-msg-input {
+    border: solid;
+    border-radius: 6px;
+    width: 70vw;
+    display: flex;
+    height: 3rem;
+    padding-left: 0.5rem;
+    bottom: 3.5rem;
+    align-items: center;
+}
+
+#send-msg-btn {
+    display: flex;
+    position: relative;
+    align-items: center;
+    background-color: #990000;
+    color: #fff;
+    cursor: pointer;
 }
