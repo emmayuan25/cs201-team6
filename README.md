@@ -1,11 +1,6 @@
 # cs201-team6
 Final Project Team 6
 
-# Running Old Frontend
-Clone the repository to local, cd into `trojanconnect`, run `npm install`
-
-then, run `npm start` to view in browser
-
 # Running Project
 Copy T2T.sql, run in MySQL instance.
 
@@ -21,3 +16,7 @@ Download the SQL jar associated, change the password in each communication insta
  
 If you have issues, look at Piazza and if not resolved, message Pia.
 
+# Running Old Frontend
+Clone the repository to local, cd into `trojanconnect`, run `npm install`
+
+then, run `npm start` to view in browser
