@@ -51,25 +51,28 @@
 					});
 </script>
 <body style="background-color: #990000">
-	<div style="background-color: #990000; height: 600px;">
+	<div style="height: 600px;">
 		<div style="text-align: center; color: white;">
 			<h1>Navigation</h1>
 			<p>Name: ${user.username}</p>
 
 			<form action="DisplayServlet">
 				<lable for="display">Display Posts</lable>
-				<input type="submit" id="display" value="click">
+				<input type="submit" id="display" value="click" style = "background-color: #FFCC00">
 			</form>
 			<div id="result"></div>
-			<ul>
-				<li><a href="HomePage.html">Home</a></li>
-				<img src="C:\Users\16502\Pictures\th.jpg">
-				<li><a href="Search.html">Search</a></li>
-				<li><a href="Chat.html">Chat</a></li>
-				<li><a href="Profile.html">Profile</a></li>
-				<li><a href="CreatePost.html">Create Post</a></li>
-			</ul>
 		</div>
 	</div>
 </body>
+<footer style="background-color: white">
+    <div class="table">
+        <ul id="horizontal-list">
+            <li><a href="HomePage.html"><img src="../assets/home-icon.png"></a></li>
+            <li><a href="Search.html"><img src="../assets/search-icon.png"></a></li>
+            <li><a href="Chat.html"><img src="../assets/chat-icon.png"></a></li>
+            <li><a href="Profile.html"><img src="../assets/user.png"></a></li>
+            <li><a href="CreatePost.html"><img src="../assets/post-icon.png"></a></li>
+        </ul>
+    </div>
+</footer>
 </html>
