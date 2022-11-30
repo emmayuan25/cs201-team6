@@ -748,9 +748,9 @@ public class JDBCConnector {
    
  //get list of all chats b/w 2 people ordered by time
  		//id1 is our identity, id2 is the person who's text we want to pull up
- 		synchronized public static Map<Timestamp, Integer> getMessageList(int id1, int id2) { 
- 			Map<Timestamp, Integer> messagelist = new HashMap<Timestamp, Integer>();
- 			Map<Timestamp, Integer> tm = new TreeMap<Timestamp, Integer>();
+			synchronized public static Map<Timestamp, String> getMessageList(int id1, int id2) { 
+ 			Map<Timestamp, String> messagelist = new HashMap<Timestamp, String>();
+ 			Map<Timestamp, String> tm = new TreeMap<Timestamp, String>();
  			Connection conn = null;
  			Statement st = null;  
  			ResultSet rs = null;
@@ -763,7 +763,7 @@ public class JDBCConnector {
  					int toUID = rs.getInt("toUID");
  					int fromUID = rs.getInt("fromUID");
 					String msg = rs.getString("messageText");
-					String inputVal = fromUID+"_"+msg;
+					String inputVal = fromUID.toString()+"_"+msg;
  					if (toUID == id2) {
  						Timestamp createdAt = rs.getTimestamp("createdAt");
  						messagelist.put(createdAt, inputVal);
@@ -773,13 +773,13 @@ public class JDBCConnector {
  				while(rs.next()) {
  					int fromUID = rs.getInt("fromUID");
 					String msg = rs.getString("messageText");
-					String inputVal = fromUID+"_"+msg;
+					String inputVal = fromUID.toString()+"_"+msg;
  					if (fromUID == id2) {
  						Timestamp createdAt = rs.getTimestamp("createdAt");
  						messagelist.put(createdAt, inputVal);
  					}
  				}
- 				Map<Timestamp, Integer> treeMap = new TreeMap<Timestamp, Integer>((Comparator<? super Timestamp>) messagelist);
+ 				Map<Timestamp, String> treeMap = new TreeMap<Timestamp, String>((Comparator<? super Timestamp>) messagelist);
  				tm = treeMap;
  			} catch (SQLException e) {
  				System.out.println("SQL exception in Server getInterestList() "+ e);
