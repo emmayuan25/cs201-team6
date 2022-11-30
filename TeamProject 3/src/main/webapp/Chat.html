@@ -28,10 +28,10 @@
             
         </div>
         <div class="footer">
-            <a href="/"><img class="footer-icon" src="./assets/home-icon.png" alt="home"/></a>
-            <a href="/"><img class="footer-icon" src="./assets/search-icon.png" alt="search"/></a>
+            <a href="HomePage.html"><img class="footer-icon" src="./assets/home-icon.png" alt="home"/></a>
+            <a href="Search.html"><img class="footer-icon" src="./assets/search-icon.png" alt="search"/></a>
             <a href=""><img class="footer-icon" src="./assets/chat-icon.png" alt="chat"/></a>
-            <a href="/"><img class="footer-icon" src="./assets/user.png" alt="profile"/></a>
+            <a href="Profile.html"><img class="footer-icon" src="./assets/user.png" alt="profile"/></a>
         </div>
     </div>
 
@@ -92,7 +92,7 @@
                     UID: userID
                 },
                 success: function(result) {
-                    contactList.appendChild(addContact(result.name, result.userID));
+                    contactList.appendChild(addContact(result.name, result.userID, result.image));
                 }
             });
             return false;
@@ -113,8 +113,9 @@
                 console.log("disconnected");
             }
         }
-        function sendMessage(message) {
-            socket.send(message);
+        function sendMessage(message, fromID, toID) {
+            var json = "{message: " + message + ", fromID: " + fromID +", toID: " + toID + "}";
+            socket.send(json);
             return false;
         }
 

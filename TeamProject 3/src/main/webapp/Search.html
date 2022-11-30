@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <title>Search</title>
+<link rel="stylesheet" type="text/css" href="./CSS/search.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script type="text/javascript">
+	<!-- <script type="text/javascript">
 		$(document).ready(function(){
 			$('#submitbttn').click(function(){
 				var search = $('#search').val();
@@ -28,28 +29,49 @@
 			});
 
 		});
-	</script>
+	</script> -->
 </head>
-<body style="background-color: #990000">
-	<div style="background-color: #990000; height: 600px;">
-		<div style="text-align: center; color: white;">
-	<h1>Search</h1>
-	<form action="SearchServlet">
-		<lable for="search">search:<lable>
-		<input type="text" id="search" name="search">
-		<input type="submit" id="submitbttn">
-		<span id="result"></span>
-	</form>
-	
-	<br>
-	<h1>Navigation</h1>
-		<ul>
-			<li><a href="HomePage.html">Home</a></li>
-			<li><a href="Search.html">Search</a></li>
-			<li><a href="Chat.html">Chat</a></li>
-			<li><a href="Profile.html">Profile</a></li>
-		</ul>
+<body>
+	<div class="page">
+
+		<h1>Search</h1>
+
+		<form id="search-form">
+			<input type="text" id="search-input" name="search-input" placeholder="Search for an alumni...">
+			<input type="submit" id="submit-btn" onclick="" />
+		</form>
+
+		<div id="search-result"></div>
+
+		<div class="footer">
+			<a href="HomePage.html"><img class="footer-icon" src="./assets/home-icon.png" alt="home"/></a>
+			<a href=""><img class="footer-icon" src="./assets/search-icon.png" alt="search"/></a>
+			<a href="Chat.html"><img class="footer-icon" src="./assets/chat-icon.png" alt="chat"/></a>
+			<a href="Profile.html"><img class="footer-icon" src="./assets/user.png" alt="profile"/></a>
 		</div>
-		</div>
+
+	</div>
+	<script src="./Javascript/search.js"></script>
+	<script type="text/javascript">
+		function getSearchResult(e) {
+			var input = document.getElementById("search-input").value;
+			var resultbox = document.getElementById("search-result");
+
+			e.preventDefault();
+
+            $.ajax({
+                type: "GET",
+                url: "?servlet",
+                async: true,
+                data: {
+                    key: input
+                },
+                success: function(result) {
+					resultbox.appendChild(addContact(result.name, result.userID));
+                }
+            });
+            return false;
+		}
+	</script>
 </body>
 </html>
