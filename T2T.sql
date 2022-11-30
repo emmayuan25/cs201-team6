@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS ChatMessage;
 DROP TABLE IF EXISTS Post;
 DROP TABLE IF EXISTS User;
 DROP TABLE IF EXISTS Interest;
-DROP TABLE IF EXIST PostInterst;
+DROP TABLE IF EXISTS PostInterst;
 
 CREATE TABLE Interest (
 	interestID int(11) primary key not null auto_increment,
