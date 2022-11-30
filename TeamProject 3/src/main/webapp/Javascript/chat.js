@@ -14,7 +14,7 @@ function addContact(name, userid) {
     return newContact;
 }
 
-contactList.appendChild(addContact('user1', 1));contactList.appendChild(addContact('user2', 2));contactList.appendChild(addContact('user3', 3));
+// contactList.appendChild(addContact('user1', 1));contactList.appendChild(addContact('user2', 2));contactList.appendChild(addContact('user3', 3));
 
 // display message
 var chatbox = document.getElementById("chat-box");
@@ -41,13 +41,16 @@ function addMsg(text, out) {
 }
 
 
-chatbox.appendChild(addMsg("test message out", true));
-chatbox.appendChild(addMsg("test message in", false));
-chatbox.appendChild(addMsg("test message out", true));
+// chatbox.appendChild(addMsg("test message out", true));
+// chatbox.appendChild(addMsg("test message in", false));
+// chatbox.appendChild(addMsg("test message out", true));
 
 
 function sendMsg() {
     var msginput = document.getElementById("send-msg-input");
+    var fromID = localStorage.getItem("userID");
+    var toID = localStorage.getItem("selectedID");
+
     if(!msginput){
         alert("error");
     } else if(msginput.value == "") {
@@ -55,7 +58,17 @@ function sendMsg() {
     } else {
         console.log(msginput.value);
         chatbox.appendChild(addMsg(msginput.value, true));
-        // send to backend;
+        
+        $.ajax({
+            type: "POST",
+            url: "?servlet",
+            data: {
+                fromUID: fromID,
+                toUID: toID,
+                message: msginput
+            }
+        })
+
         msginput.value = "";
     }
 }

@@ -8,7 +8,7 @@
     <title>Chat</title>
 	
 </head>
-<body>
+<body onload="getContactList(e); connectToServer();">
 	<!-- <form action="DisplayChatsServlet" method="POST">
 		<h1>Display current chats</h1>
 		<input type="submit">
@@ -37,7 +37,91 @@
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="./Javascript/chat.js"></script>
+    
     <script type="text/javascript">
+
+        // load chat messaging
+        function selectChat(e, chatID) {
+            $('.contact-box').removeClass('active').filter(e).toggleClass('active');
+
+            console.log("Selected chat userid: " + id);
+            localStorage.setItem("selectedID", chatID);
+
+            // var userID = localStorage.getItem("userID");
+            var userID = 1;
+            var chatbox = document.getElementById("chat-box");
+
+            e.preventDefault();
+            $.ajax({
+                type: "GET",
+                url: "?servlet",
+                async: true,
+                data: {
+                    UID: userID,
+                    toID: chatID
+                },
+                success: function(result) {
+                    for(var i = 0; i < result.length; i++) {
+                        if(result.id === userID) {
+                            chatbox.appendChild(addMsg(result.text, true));
+                        } else {
+                            chatbox.appendChild(addMsg(result.text, false));
+                        }
+                    }
+                }
+            });
+            return false;
+        };
+
+        // load contact list
+        function getContactList(e) {
+            // var userID = localStorage.getItem("userID");
+            var userID = 1;
+            
+            console.log("Current userid:" + userID);
+
+            e.preventDefault();
+
+            var contactList = document.getElementById("chat-list");
+            $.ajax({
+                type: "GET",
+                url: "?servlet",
+                async: true,
+                data: {
+                    UID: userID
+                },
+                success: function(result) {
+                    contactList.appendChild(addContact(result.name, result.userID));
+                }
+            });
+            return false;
+        }
+
+
+        // web socket
+        var socket;
+        function connectToServer() {
+            socket = new WebSocket("ws://localhost:8080/Test-Web/ws");
+            socket.onopen = function(event) {
+                console.log("socket connected");
+            }
+            socket.onmessage = function(event) {
+                document.getElementById("chat-box").chatbox.appendChild(addMsg(event.message, true));
+            }
+            socket.onclose = function(event) {
+                console.log("disconnected");
+            }
+        }
+        function sendMessage(message) {
+            socket.send(message);
+            return false;
+        }
+
+
+    </script>
+
+    <!-- <script type="text/javascript">
 		$(document).ready(function(){
 			$('#display').click(function(){
 				$.ajax({
@@ -61,13 +145,6 @@
 			});
 
 		});
-	</script>
-    <script src="./Javascript/chat.js"></script>
-    <script type="text/javascript">
-        function selectChat(e, id) {
-            $('.contact-box').removeClass('active').filter(e).toggleClass('active');
-            console.log(id);
-        };
-    </script>
+	</script> -->
 </body>
 </html>
