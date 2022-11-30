@@ -763,7 +763,7 @@ public class JDBCConnector {
  					int toUID = rs.getInt("toUID");
  					int fromUID = rs.getInt("fromUID");
 					String msg = rs.getString("messageText");
-					String inputVal = fromUID.toString()+"_"+msg;
+					String inputVal = Integer.toString(fromUID)+"_"+msg;
  					if (toUID == id2) {
  						Timestamp createdAt = rs.getTimestamp("createdAt");
  						messagelist.put(createdAt, inputVal);
@@ -773,7 +773,7 @@ public class JDBCConnector {
  				while(rs.next()) {
  					int fromUID = rs.getInt("fromUID");
 					String msg = rs.getString("messageText");
-					String inputVal = fromUID.toString()+"_"+msg;
+					String inputVal = Integer.toString(fromUID)+"_"+msg;
  					if (fromUID == id2) {
  						Timestamp createdAt = rs.getTimestamp("createdAt");
  						messagelist.put(createdAt, inputVal);
