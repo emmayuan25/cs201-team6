@@ -762,17 +762,21 @@ public class JDBCConnector {
  				while(rs.next()) {
  					int toUID = rs.getInt("toUID");
  					int fromUID = rs.getInt("fromUID");
+					String msg = rs.getString("messageText");
+					String inputVal = fromUID+"_"+msg;
  					if (toUID == id2) {
  						Timestamp createdAt = rs.getTimestamp("createdAt");
- 						messagelist.put(createdAt, fromUID);
+ 						messagelist.put(createdAt, inputVal);
  					}              
  				}
  				rs=st.executeQuery("SELECT * FROM ChatMessage WHERE toUID ="+id1);
  				while(rs.next()) {
  					int fromUID = rs.getInt("fromUID");
+					String msg = rs.getString("messageText");
+					String inputVal = fromUID+"_"+msg;
  					if (fromUID == id2) {
  						Timestamp createdAt = rs.getTimestamp("createdAt");
- 						messagelist.put(createdAt, fromUID);
+ 						messagelist.put(createdAt, inputVal);
  					}
  				}
  				Map<Timestamp, Integer> treeMap = new TreeMap<Timestamp, Integer>((Comparator<? super Timestamp>) messagelist);
