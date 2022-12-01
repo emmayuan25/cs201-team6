@@ -684,7 +684,7 @@ public class JDBCConnector {
 				ResultSet rs3 = null;
 				try {
 					// get the userName and userImage of those in friendIDSet
-					ps3 = conn.prepareStatement("SELECT userName, userImage FROM Users WHERE userID=?");
+					ps3 = conn.prepareStatement("SELECT userName, userImage FROM User WHERE userID=?");
 					ps3.setInt(1, friendID);
 					rs3 = ps3.executeQuery();
 					
@@ -812,7 +812,7 @@ public class JDBCConnector {
 					ResultSet rs2 = null;
 					
 					try {
-						ps2 = conn.prepareStatement("SELECT userImage FROM Users WHERE userID=?");
+						ps2 = conn.prepareStatement("SELECT userImage FROM User WHERE userID=?");
 						ps2.setInt(1, senderID);
 						rs2 = ps2.executeQuery();
 						while(rs2.next()) {
@@ -842,7 +842,7 @@ public class JDBCConnector {
 					ResultSet rs2 = null;
 					
 					try {
-						ps2 = conn.prepareStatement("SELECT userImage FROM Users WHERE userID=?");
+						ps2 = conn.prepareStatement("SELECT userImage FROM User WHERE userID=?");
 						ps2.setInt(1, receiverID);
 						rs2 = ps2.executeQuery();
 						while(rs2.next()) {
@@ -899,7 +899,7 @@ public class JDBCConnector {
 	        conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=" + JDBCConnector.sql_password);
 	           
 	           // get the chat messages between input_userID and input_friendID
-	        ps = conn.prepareStatement("SELECT userName, userImage, interestID FROM Users WHERE userID=?");
+	        ps = conn.prepareStatement("SELECT userName, userImage, interestID FROM User WHERE userID=?");
 	        ps.setInt(1, input_userID);
 	        rs = ps.executeQuery();
 	        
