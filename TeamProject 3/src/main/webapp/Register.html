@@ -5,52 +5,70 @@
 <title>Register</title>
 <link rel="stylesheet" href="./CSS/Login.css">
 </head>
+
 <body class="newBackgroundColor">
-    <div>
-    <div class="content" > 
-        <h1>Register</h1>
-        <h3>Sign Up</h3>
-        <form action="RegisterServlet" name="registerForm" method="POST">
-            <lable for="username">Username:<lable>
-            <input type="text" id="username" name="username">
-            
-            
-            <br>
-            <lable for="password">Password:<lable>
-            <input type="text" id="password" name="password">
-            
-            <br>
-            <lable for="image">Profile Picture URL:<lable>
-            <input type="text" id="image" name="image"> 
-            
-            <br><br>
-            <br>
-            <label for="interest">Interest (Select Only One):</label>
-            <br>
-            <input id="interest1" type="checkbox" name="interest" value="marshall">
-            <label for="interest1"> Marshall</label><br>
-            <input id="interest2" type="checkbox" name="interest" value="viterbi">
-            <label for="interest2"> Viterbi</label><br>
-            <input  id="interest3" type="checkbox" name="interest" value ="dornsife">
-            <label for="interest3">Dornsife</label><br>
-            <input  id="interest4" type="checkbox" name="interest" value ="computerScience">
-            <label for="interest4">Computer Science</label><br>
-            <input  id="interest5" type="checkbox" name="interest" value ="csba">
-            <label for="interest5">CSBA</label><br>
-            <input  id="interest6" type="checkbox" name="interest" value ="businessAdmin">
-            <label for="interest6">Business Administration</label><br>
-            <input  id="interest7" type="checkbox" name="interest" value ="csgames">
-            <label for="interest7">CS Games</label><br>
-            <input  id="interest8" type="checkbox" name="interest" value ="cais">
-            <label for="interest8">CAIS</label><br>
-            <input  id="interest9" type="checkbox" name="interest" value ="athenaHacks">
-            <label for="interest9">Athena Hacks</label><br>
-            <input  id="interest10" type="checkbox" name="interest" value ="scope">
-            <label for="interest10">Scope</label>
-            <br><br>
-            <input type="submit" value="Create Account" style = "width: 175px; height: 35px; background-color: #FFCC00">
-        </form>
-    </div>
-    </div>
+	<div>
+		<div class="content">
+			<h1 style="font-size: 40px;">Register</h1>
+			<h3>Sign up to connect with your fellow trojans!</h3>
+			<form action="RegisterServlet" name="registerForm" method="POST">
+				<lable for="username">Username:<lable> <input
+					type="text" id="username" name="username"> <br>
+				<br>
+				<lable for="password">Password:<lable> <input
+					type="text" id="password" name="password"> <br>
+				<br>
+				<lable for="image">Profile Picture URL:<lable> <input
+					type="text" id="image" name="image"> <br>
+				<br>
+				<br>
+				<label for="interest">Interest (Select Only One):</label> <br>
+				<br></br>
+				<table style="margin: 0px auto;">
+					<tr>
+						<td><input id="interest1" type="checkbox" name="interest"
+							value="marshall"> <label for="interest1">
+								Marshall</label></td>
+						<td><input id="interest4" type="checkbox" name="interest"
+							value="computerScience"> <label for="interest4">Computer
+								Science</label></td>
+						<td><input id="interest8" type="checkbox" name="interest"
+							value="cais"> <label for="interest8">CAIS</label></td>
+					</tr>
+					<tr>
+						<td><input id="interest3" type="checkbox" name="interest"
+							value="dornsife"> <label for="interest3">Dornsife</label></td>
+						<td><input id="interest5" type="checkbox" name="interest"
+							value="csba"> <label for="interest5">CSBA</label></td>
+						<td><input id="interest9" type="checkbox" name="interest"
+							value="athenaHacks"> <label for="interest9">Athena
+								Hacks</label></td>
+					</tr>
+					<tr>
+						<td><input id="interest2" type="checkbox" name="interest"
+							value="viterbi"> <label for="interest2"> Viterbi</label></td>
+						<td><input id="interest6" type="checkbox" name="interest"
+							value="businessAdmin"> <label for="interest6">Business
+								Administration</label></td>
+						<td><input id="interest10" type="checkbox" name="interest"
+							value="scope"> <label for="interest10">Scope</label></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><input id="interest7" type="checkbox" name="interest"
+							value="csgames"> <label for="interest7">CS Games</label></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+					</tr>
+				</table>
+				<br>
+				<br>
+				<input type="submit" value="Create Account"
+					style="width: 175px; height: 35px; background-color: #FFCC00">
+			</form>
+		</div>
+	</div>
 </body>
 </html>
