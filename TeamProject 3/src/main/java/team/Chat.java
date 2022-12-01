@@ -1,9 +1,20 @@
-package team;
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 
+public class Chat {
+	private int friendID;
+	private String friendUserName;
+	private String friendUserImage;
+	
+	public Chat(int friendID, String friendUserName, String friendUserImage) {
+		this.friendID = friendID;
+		this.friendUserName = friendUserName;
+		this.friendUserImage = friendUserImage;
+	}
+}
+
+/*
 public class Chat {
 	private int userID;
 	private int friendID;
@@ -93,3 +104,4 @@ class ChatComparator implements Comparator<Chat> {
 		else return 0;
 	}
 }
+*/

@@ -1,5 +1,3 @@
-package team;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -21,6 +19,8 @@ import java.util.TreeMap;
 
 
 public class JDBCConnector {
+	private static String sql_user = "root";
+	private static String sql_password = "mysql@cs201"; // change this before submission
 	
 	//check user log in
 	//TODO figure out if I return user or int
@@ -41,7 +41,7 @@ public class JDBCConnector {
 		User user = null;
 		
 	    try{
-	    	conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=Cupcake1!");
+	        conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=" + JDBCConnector.sql_password);
 	    	String line = "SELECT * FROM User WHERE userName=? and password = ?";
 	    	PreparedStatement statement = conn.prepareStatement(line);
 	    	statement.setString(1, username);
@@ -89,7 +89,7 @@ public class JDBCConnector {
 	    try {
 	    	
 	    	
-	    	conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=Cupcake1!");
+	        conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=" + JDBCConnector.sql_password);
 		    st = conn.createStatement();
 		    
 		    String username = null;
@@ -634,77 +634,95 @@ public class JDBCConnector {
 		}
 	   
    }
-
-   synchronized public static Set<User> getChatList(int id) {
+   
+   // get everyone whom the input user has sent or received messages with
+   synchronized public static ChatsList getChatsList(int input_userID) {
 	   try {
 		    Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException cnfe) {
 		    System.out.println(cnfe.getMessage());
 		} 
 	   
-	   	Set<Integer> chatlist = new HashSet<Integer>();
-		Set<Integer> chatOther = new HashSet<Integer>();
-		Set<User> userOther = new HashSet<User>();
+	   HashSet<Integer> friendIDSet = new HashSet<Integer>();
+	   ArrayList<Chat> chatsArrayList = new ArrayList<Chat>();
 	
-		Connection conn = null;
-		Statement st = null;  
-		ResultSet rs = null;
-		User user = new User();
+	   Connection conn = null;
+	   PreparedStatement ps = null;
+	   ResultSet rs = null;
+	   PreparedStatement ps2 = null;
+	   ResultSet rs2 = null;
 		   
-		   try {
-		   conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=Cupcake1!");
-		   st=conn.createStatement();
-		   	rs=st.executeQuery("SELECT * FROM ChatMessage WHERE fromUID ="+id );
+	   try {
+		   	conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=" + JDBCConnector.sql_password);
+		   	
+		   	// get the receiverID for the chat messages where senderID == input_userID
+			ps = conn.prepareStatement("SELECT toUID FROM ChatMessage WHERE fromUID=?");
+			ps.setInt(1, input_userID);
+			rs = ps.executeQuery();
+		   
 			while(rs.next()) {
-				int messageID = rs.getInt("messageID");
-				int toUID = rs.getInt("toUID");
-				chatlist.add(messageID);
-				chatOther.add(toUID);
-								   
-			}
-			rs=st.executeQuery("SELECT * FROM ChatMessage WHERE toUID ="+id );
-			while(rs.next()) {
-				int messageID = rs.getInt("messageID");
-				int fromUID = rs.getInt("fromUID");
-				chatlist.add(messageID);
-				chatOther.add(fromUID);
-								   
+				int receiverID = rs.getInt("toUID");
+				if(!friendIDSet.contains(receiverID)) {
+					friendIDSet.add(receiverID);
+				}				   
 			}
 			
-	
-	
-			for (int s : chatOther) {
-				rs=st.executeQuery("SELECT * FROM User WHERE userID="+s);
-				while(rs.next()) {
-					user = new User();
-					user.setUserID(rs.getInt("userID"));
-					user.setUsername(rs.getString("userName"));
-					user.setProfilePicture(rs.getString("userImage"));
-					user.setInterestID(rs.getInt("interestID"));
-					userOther.add(user);
-				}
-				
+			// get the senderID for the chat messages where receiverID == input_userID
+			ps2 = conn.prepareStatement("SELECT fromUID FROM ChatMessage WHERE toUID=?");
+			ps2.setInt(1, input_userID);
+			rs2 = ps2.executeQuery();
+
+			while(rs2.next()) {
+				int senderID = rs2.getInt("fromUID");
+				if(!friendIDSet.contains(senderID)) {
+					friendIDSet.add(senderID);
+				}				   
 			}
-	
+		
+			for(Integer friendID : friendIDSet) {
+				PreparedStatement ps3 = null;
+				ResultSet rs3 = null;
+				try {
+					// get the userName and userImage of those in friendIDSet
+					ps3 = conn.prepareStatement("SELECT userName, userImage FROM Users WHERE userID=?");
+					ps3.setInt(1, friendID);
+					rs3 = ps3.executeQuery();
+					
+					while(rs3.next()) {
+						String userName = rs3.getString("userName");
+						String userImage = rs3.getString("userImage");
+						
+						Chat current_chat = new Chat(friendID, userName, userImage);
+						chatsArrayList.add(current_chat);
+					}
+				} catch (SQLException e) {
+					System.out.println("SQL exception in Server getChatsList() "+ e);
+				} finally {
+					try {
+						if(rs3 != null) rs3.close();
+						if(ps3 != null) ps3.close();
+					} catch(SQLException sqle) {
+						   System.out.println("sqle: "+ sqle.getMessage());
+					}
+				}
+			}
 		} catch (SQLException e) {
-			System.out.println("SQL exception in Server getChatList() "+ e);
-		}finally {
+			System.out.println("SQL exception in Server getChatsList() "+ e);
+		} finally {
 			try {
-				if(st!=null) {
-					st.close();
-				}
-				if(conn!=null) {
-					   conn.close();
-				   }
-				   if(rs !=null) {
-					   conn.close();
-				}
+				if(rs2 != null) rs2.close();
+				if(ps2 != null) ps2.close();
+				if(rs != null) rs.close();
+				if(ps != null) ps.close();
+				if(conn != null) conn.close();
 			} catch(SQLException sqle) {
 				   System.out.println("sqle: "+ sqle.getMessage());
 			   }
 		}
-		   return userOther;
-		   }
+	   
+		ChatsList chatsList = new ChatsList(chatsArrayList);
+		return chatsList;
+	}
    
  
    
@@ -744,62 +762,177 @@ public class JDBCConnector {
 	  
    }
 
+   // get a specific list of chat messages
    
+   synchronized public static ChatMessagesList getMessagesList(int input_userID, int input_friendID) { 
+	   try {
+		    Class.forName("com.mysql.cj.jdbc.Driver");
+	   } catch (ClassNotFoundException cnfe) {
+		    System.out.println(cnfe.getMessage());
+	   } 
+	   
+	   ArrayList<ChatMessage> messagesList = new ArrayList<ChatMessage>();
+	   HashMap<Integer, String> imagesMap = new HashMap<Integer, String>();
+	
+	   Connection conn = null;
+	   PreparedStatement ps = null;
+	   ResultSet rs = null;
+		   
+	   try {
+		   	conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=" + JDBCConnector.sql_password);
+		   	
+		   	// get the chat messages between input_userID and input_friendID
+			ps = conn.prepareStatement("SELECT fromUID, toUID, messageText, createdAt FROM ChatMessage WHERE (fromUID=? AND toUID=?) OR (fromUID=? AND toUID=?)");
+			ps.setInt(1, input_userID);
+			ps.setInt(2, input_friendID);
+			ps.setInt(3, input_friendID);
+			ps.setInt(4, input_userID);
+			rs = ps.executeQuery();
+		   
+			while(rs.next()) {
+				int senderID = rs.getInt("fromUID");
+				int receiverID = rs.getInt("toUID");
+				String messageText = rs.getString("messageText");
+				Timestamp timestamp = rs.getTimestamp("createdAt");
+				
+				// create ChatMessage objects and store in ArrayList
+				ChatMessage message = new ChatMessage(senderID, receiverID, null, null, messageText, timestamp);
+				messagesList.add(message);
+			}
+			
+			// get the profile pictures
+			for(ChatMessage message : messagesList) {
+				int senderID = message.getSenderID();
+				if(imagesMap.containsKey(senderID)) {
+					String profilePicture = imagesMap.get(senderID);
+					message.setSenderProfilePicture(profilePicture);
+				}
+				else {
+					PreparedStatement ps2 = null;
+					ResultSet rs2 = null;
+					
+					try {
+						ps2 = conn.prepareStatement("SELECT userImage FROM Users WHERE userID=?");
+						ps2.setInt(1, senderID);
+						rs2 = ps2.executeQuery();
+						while(rs2.next()) {
+							String senderProfilePicture = rs2.getString("userImage");
+							message.setSenderProfilePicture(senderProfilePicture);
+							imagesMap.put(senderID, senderProfilePicture);
+						}
+					} catch (SQLException e) {
+						System.out.println("SQL exception in Server getMessagesList() "+ e);
+					} finally {
+						try {
+							if(rs2 != null) rs2.close();
+							if(ps2 != null) ps2.close();
+						} catch(SQLException sqle) {
+							System.out.println("sqle: "+ sqle.getMessage());
+						}
+					}
+				}
+				
+				int receiverID = message.getReceiverID();
+				if(imagesMap.containsKey(receiverID)) {
+					String profilePicture = imagesMap.get(receiverID);
+					message.setReceiverProfilePicture(profilePicture);
+				}
+				else {
+					PreparedStatement ps2 = null;
+					ResultSet rs2 = null;
+					
+					try {
+						ps2 = conn.prepareStatement("SELECT userImage FROM Users WHERE userID=?");
+						ps2.setInt(1, receiverID);
+						rs2 = ps2.executeQuery();
+						while(rs2.next()) {
+							String receiverProfilePicture = rs2.getString("userImage");
+							message.setReceiverProfilePicture(receiverProfilePicture);
+							imagesMap.put(receiverID, receiverProfilePicture);
+						}
+					} catch (SQLException e) {
+						System.out.println("SQL exception in Server getMessagesList() "+ e);
+					} finally {
+						try {
+							if(rs2 != null) rs2.close();
+							if(ps2 != null) ps2.close();
+						} catch(SQLException sqle) {
+							System.out.println("sqle: "+ sqle.getMessage());
+						}
+					}
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("SQL exception in Server getMessagesList() "+ e);
+		} finally {
+			try {
+				if(rs != null) rs.close();
+				if(ps != null) ps.close();
+				if(conn != null) conn.close();
+			} catch(SQLException sqle) {
+				System.out.println("sqle: "+ sqle.getMessage());
+			}
+		}
+	   
+	   	//sort the messages by timestamp
+	   	messagesList.sort(new ChatMessageComparator());
+	   	
+		ChatMessagesList chat_messages_list = new ChatMessagesList(messagesList);
+		return chat_messages_list;
+	}
    
- //get list of all chats b/w 2 people ordered by time
- 		//id1 is our identity, id2 is the person who's text we want to pull up
-			synchronized public static Map<Timestamp, String> getMessageList(int id1, int id2) { 
- 			Map<Timestamp, String> messagelist = new HashMap<Timestamp, String>();
- 			Map<Timestamp, String> tm = new TreeMap<Timestamp, String>();
- 			Connection conn = null;
- 			Statement st = null;  
- 			ResultSet rs = null;
- 			
- 			try {
- 				conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=Cupcake1!");
- 				st=conn.createStatement();
- 				rs=st.executeQuery("SELECT * FROM ChatMessage WHERE fromUID ="+id1);
- 				while(rs.next()) {
- 					int toUID = rs.getInt("toUID");
- 					int fromUID = rs.getInt("fromUID");
-					String msg = rs.getString("messageText");
-					String inputVal = Integer.toString(fromUID)+"_"+msg;
- 					if (toUID == id2) {
- 						Timestamp createdAt = rs.getTimestamp("createdAt");
- 						messagelist.put(createdAt, inputVal);
- 					}              
- 				}
- 				rs=st.executeQuery("SELECT * FROM ChatMessage WHERE toUID ="+id1);
- 				while(rs.next()) {
- 					int fromUID = rs.getInt("fromUID");
-					String msg = rs.getString("messageText");
-					String inputVal = Integer.toString(fromUID)+"_"+msg;
- 					if (fromUID == id2) {
- 						Timestamp createdAt = rs.getTimestamp("createdAt");
- 						messagelist.put(createdAt, inputVal);
- 					}
- 				}
- 				Map<Timestamp, String> treeMap = new TreeMap<Timestamp, String>((Comparator<? super Timestamp>) messagelist);
- 				tm = treeMap;
- 			} catch (SQLException e) {
- 				System.out.println("SQL exception in Server getInterestList() "+ e);
- 			}finally {
- 				try {
- 					if(st!=null) {
- 						st.close();
- 					}
- 					if(conn!=null) {
- 						conn.close();
- 					}
- 					if(rs !=null) {
- 						conn.close();
- 					}
- 				} catch(SQLException sqle) {
- 					System.out.println("sqle: "+ sqle.getMessage());
- 				}
- 			}
- 			return tm;
- 		}
+   public static User getUser(int input_userID) {
+	    try {
+	        Class.forName("com.mysql.cj.jdbc.Driver");
+	    } catch (ClassNotFoundException cnfe) {
+	        System.out.println(cnfe.getMessage());
+	    } 
+	   
+	    ArrayList<ChatMessage> messagesList = new ArrayList<ChatMessage>();
+	    HashMap<Integer, String> imagesMap = new HashMap<Integer, String>();
+
+	    Connection conn = null;
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+	       
+	    try {
+	        conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=" + JDBCConnector.sql_password);
+	           
+	           // get the chat messages between input_userID and input_friendID
+	        ps = conn.prepareStatement("SELECT userName, userImage, interestID FROM Users WHERE userID=?");
+	        ps.setInt(1, input_userID);
+	        rs = ps.executeQuery();
+	        
+	        String userName = "";
+	        String userImage = "";
+	        int interestID = 0;
+	        while(rs.next()) {
+	            userName = rs.getString("userName");
+	            userImage = rs.getString("userImage");
+	            interestID = rs.getInt("interestID");
+	        }
+
+	        User u = new User();
+	        u.setUserID(input_userID);
+	        u.setProfilePicture(userImage);
+	        u.setUsername(userName);
+	        u.setInterestID(interestID);
+
+	        return u;
+	    } catch (SQLException e) {
+			System.out.println("SQL exception in Server getMessagesList() "+ e);
+		} finally {
+			try {
+				if(rs != null) rs.close();
+				if(ps != null) ps.close();
+				if(conn != null) conn.close();
+			} catch(SQLException sqle) {
+				System.out.println("sqle: "+ sqle.getMessage());
+			}
+		}
+	    
+		return null;
+	}
  		
 
     

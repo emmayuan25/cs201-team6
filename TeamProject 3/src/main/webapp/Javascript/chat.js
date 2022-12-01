@@ -1,37 +1,36 @@
-console.log("here");
+
 
 var contactList = document.getElementById("chat-list");
 
-console.log(contactList);
 
-function addContact(name, userid) {
+function addContact(name, userid, userimg) {
     var newContact = document.createElement('div');
     var content = `
         <div class='contact-box' onclick="selectChat(this, `+ userid +`);">
-            <img class='contact-icon' src='./assets/user.png' alt='user' />
+            <img class='contact-icon' src='` + userimg +`' alt='user' />
             <span class='contact-name' >` + name + `</span></div>`;
     newContact.innerHTML = content;
     return newContact;
 }
 
-// contactList.appendChild(addContact('user1', 1));contactList.appendChild(addContact('user2', 2));contactList.appendChild(addContact('user3', 3));
 
 // display message
 var chatbox = document.getElementById("chat-box");
-function addMsg(text, out) {
+function addMsg(text, out, userimg) {
     var newMsg = document.createElement('div');
+    console.log(userimg);
     if(out == true) {
         var content =  `
             <div class="msgboxl">
                 <div class="msgtext">`
                 + text + `</div>
-                <img class='msguser' src="./assets/user.png" alt='user' /></div>`;
+                <img class='msguser' src='`+ userimg +`' alt='user' /></div>`;
         newMsg.innerHTML = content;
         
     } else {
         var content =  `
             <div class="msgboxr">
-                <img class='msguser' src='./assets/user.png' alt='user' />
+                <img class='msguser' src='`+ userimg +`' alt='user' />
                 <div class="msgtext">`
                 + text + `</div></div>`;
         newMsg.innerHTML = content;
@@ -41,9 +40,9 @@ function addMsg(text, out) {
 }
 
 
-// chatbox.appendChild(addMsg("test message out", true));
-// chatbox.appendChild(addMsg("test message in", false));
-// chatbox.appendChild(addMsg("test message out", true));
+localStorage.setItem("profileImg","https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg");
+
+var profileImg = localStorage.getItem("profileImg");
 
 
 function sendMsg() {
@@ -57,7 +56,7 @@ function sendMsg() {
         alert("input cannot be empty");
     } else {
         console.log(msginput.value);
-        chatbox.appendChild(addMsg(msginput.value, true));
+        chatbox.appendChild(addMsg(msginput.value, true, profileImg));
         
         $.ajax({
             type: "POST",

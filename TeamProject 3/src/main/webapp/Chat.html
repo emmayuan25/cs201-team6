@@ -8,7 +8,7 @@
     <title>Chat</title>
 	
 </head>
-<body onload="getContactList(e); connectToServer();">
+<body onload="getContactList(); connectToServer();">
 	<!-- <form action="DisplayChatsServlet" method="POST">
 		<h1>Display current chats</h1>
 		<input type="submit">
@@ -30,7 +30,7 @@
         <div class="footer">
             <a href="HomePage.html"><img class="footer-icon" src="./assets/home-icon.png" alt="home"/></a>
             <a href="Search.html"><img class="footer-icon" src="./assets/search-icon.png" alt="search"/></a>
-            <a href=""><img class="footer-icon" src="./assets/chat-icon.png" alt="chat"/></a>
+            <a href=""><img id="footer-icon" class="footer-icon" src="./assets/chat-icon.png" alt="chat"/></a>
             <a href="Profile.html"><img class="footer-icon" src="./assets/user.png" alt="profile"/></a>
         </div>
     </div>
@@ -45,28 +45,32 @@
         function selectChat(e, chatID) {
             $('.contact-box').removeClass('active').filter(e).toggleClass('active');
 
-            console.log("Selected chat userid: " + id);
+            console.log("Selected chat userid: " + chatID);
             localStorage.setItem("selectedID", chatID);
 
             // var userID = localStorage.getItem("userID");
             var userID = 1;
             var chatbox = document.getElementById("chat-box");
+            chatbox.innerHTML = "";
 
-            e.preventDefault();
             $.ajax({
                 type: "GET",
-                url: "?servlet",
+                url: "ConvoServlet",
                 async: true,
                 data: {
-                    UID: userID,
-                    toID: chatID
+                    userID: userID,
+                    friendID: chatID
                 },
                 success: function(result) {
+                	result = result.messagesList;
+                	console.log(result);
                     for(var i = 0; i < result.length; i++) {
-                        if(result.id === userID) {
-                            chatbox.appendChild(addMsg(result.text, true));
+                    	console.log(result[i].senderID);
+                    	console.log(userID);
+                        if(result[i].senderID === userID) {
+                            chatbox.appendChild(addMsg(result[i].messageText, true, result[i].receiverProfilePicture));
                         } else {
-                            chatbox.appendChild(addMsg(result.text, false));
+                            chatbox.appendChild(addMsg(result[i].messageText, false, result[i].senderProfilePicture));
                         }
                     }
                 }
@@ -75,24 +79,28 @@
         };
 
         // load contact list
-        function getContactList(e) {
+        function getContactList() {
             // var userID = localStorage.getItem("userID");
             var userID = 1;
             
             console.log("Current userid:" + userID);
 
-            e.preventDefault();
+            // e.preventDefault();
 
             var contactList = document.getElementById("chat-list");
             $.ajax({
                 type: "GET",
-                url: "?servlet",
+                url: "DisplayChatsServlet",
                 async: true,
                 data: {
                     UID: userID
                 },
                 success: function(result) {
-                    contactList.appendChild(addContact(result.name, result.userID, result.image));
+                	for(var i = 0; i < result.chatsList.length; i++) {
+                    	console.log(result.chatsList[i].friendUserName);
+                        contactList.appendChild(addContact(result.chatsList[i].friendUserName, result.chatsList[i].friendID, result.chatsList[i].friendUserImage));
+
+                	}
                 }
             });
             return false;
@@ -102,7 +110,7 @@
         // web socket
         var socket;
         function connectToServer() {
-            socket = new WebSocket("ws://localhost:8080/Test-Web/ws");
+            /* socket = new WebSocket("ws://localhost:8080/Test-Web/ws");
             socket.onopen = function(event) {
                 console.log("socket connected");
             }
@@ -111,7 +119,7 @@
             }
             socket.onclose = function(event) {
                 console.log("disconnected");
-            }
+            } */
         }
         function sendMessage(message, fromID, toID) {
             var json = "{message: " + message + ", fromID: " + fromID +", toID: " + toID + "}";
@@ -122,30 +130,5 @@
 
     </script>
 
-    <!-- <script type="text/javascript">
-		$(document).ready(function(){
-			$('#display').click(function(){
-				$.ajax({
-					type:'POST',
-					url:'DisplayChatsServlet',
-					dataType: 'JSON',
-					headers: {
-						Accept: "application/json",
-						"Content-Type" : "application/json"
-					},
-					success: function(result){
-		
-						var setChat = $.parseJSON(result);
-						var s='';
-						for(var i=0;i<setChat.length;i++){
-							s+= 'From username: '+ setChat[i].username + '<br> From Image: '+ setChat[i].userImage +'<br>';
-						}
-						document.getElementId('result').innerHTML= s;
-					}
-				});
-			});
-
-		});
-	</script> -->
 </body>
 </html>
