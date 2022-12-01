@@ -22,7 +22,7 @@
                 <div id="chat-box"></div>
                 <div style="display: flex;position:fixed;bottom:3.5rem;width:80vw;">
                     <input id="send-msg-input" type='text' placeholder='Chat message' />
-                    <button id="send-msg-btn" onclick="sendMsg();">Send</button>
+                    <button id="send-msg-btn" onclick="sendMessage();">Send</button>
                 </div>
             </div>
             
@@ -68,7 +68,7 @@
                     	console.log(result[i].senderID);
                     	console.log(userID);
                         if(result[i].senderID === userID) {
-                            chatbox.appendChild(addMsg(result[i].messageText, true, result[i].receiverProfilePicture));
+                            chatbox.appendChild(addMsg(result[i].messageText, true, result[i].senderProfilePicture));
                         } else {
                             chatbox.appendChild(addMsg(result[i].messageText, false, result[i].senderProfilePicture));
                         }
@@ -109,21 +109,57 @@
 
         // web socket
         var socket;
+        
         function connectToServer() {
-            /* socket = new WebSocket("ws://localhost:8080/Test-Web/ws");
+        	// Add your project name !
+            var projectName = "GroupProject";
+
+        	socket = new WebSocket("ws://localhost:8080/"+ projectName +"/ws");
+            
+     
             socket.onopen = function(event) {
                 console.log("socket connected");
             }
             socket.onmessage = function(event) {
-                document.getElementById("chat-box").chatbox.appendChild(addMsg(event.message, true));
+            	var profileImg = localStorage.getItem("profileImg");
+                var userID = localStorage.getItem("userID");
+            	
+            	if(event.receiverID == userID) {
+            		document.getElementById("chat-box").appendChild(addMsg(event.message, false, profileImg));
+            	}
+            	
             }
             socket.onclose = function(event) {
                 console.log("disconnected");
-            } */
+            }
         }
-        function sendMessage(message, fromID, toID) {
-            var json = "{message: " + message + ", fromID: " + fromID +", toID: " + toID + "}";
+        function sendMessage() {
+            // delete later
+			localStorage.setItem("userID", 1);
+            
+        	var msginput = document.getElementById("send-msg-input").value;
+            var fromID = localStorage.getItem("userID");
+            var toID = localStorage.getItem("selectedID");
+/*         	var profileImg = localStorage.getItem("profileImg");
+ */        	
+        	/* var msginput = "message 11";
+            var fromID = 1;
+            var toID = 2;*/
+                       
+            
+        	console.log(msginput);
+        	console.log(fromID);
+        	console.log(toID);
+
+        	var profileImg = "placeholder"; 
+
+			sendMsg();
+
+        	var json = fromID + " " + toID + " " + msginput;
             socket.send(json);
+            
+            msginput.value = "";
+            
             return false;
         }
 

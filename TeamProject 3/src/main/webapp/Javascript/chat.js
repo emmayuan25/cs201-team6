@@ -39,16 +39,13 @@ function addMsg(text, out, userimg) {
     return newMsg;
 }
 
-
+// delete after
 localStorage.setItem("profileImg","https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg");
 
-var profileImg = localStorage.getItem("profileImg");
 
 
 function sendMsg() {
     var msginput = document.getElementById("send-msg-input");
-    var fromID = localStorage.getItem("userID");
-    var toID = localStorage.getItem("selectedID");
 
     if(!msginput){
         alert("error");
@@ -56,17 +53,8 @@ function sendMsg() {
         alert("input cannot be empty");
     } else {
         console.log(msginput.value);
+        var profileImg = localStorage.getItem("profileImg");
         chatbox.appendChild(addMsg(msginput.value, true, profileImg));
-        
-        $.ajax({
-            type: "POST",
-            url: "?servlet",
-            data: {
-                fromUID: fromID,
-                toUID: toID,
-                message: msginput
-            }
-        })
 
         msginput.value = "";
     }

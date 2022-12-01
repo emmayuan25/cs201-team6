@@ -48,7 +48,7 @@ public class ConvoServlet extends HttpServlet {
 		// send back result
 		response.setStatus(HttpServletResponse.SC_OK);
 		String result_json = gson.toJson(chat_messages_list);
-		System.out.println(result_json);
+//		System.out.println(result_json);
 		pw.write(result_json);
 		pw.flush();
 	}

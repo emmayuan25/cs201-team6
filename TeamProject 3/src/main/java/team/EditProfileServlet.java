@@ -76,11 +76,11 @@ public class EditProfileServlet extends HttpServlet{
 			String userID = request.getParameter("userID");
 			int id = Integer.parseInt(userID);
 			
-			User user = JDBCConnector.getUser(id);
+//			User user = JDBCConnector.getUser(id);
 			
-			String result = gson.toJson(user);
+//			String result = gson.toJson(user);
 			
-			pw.write(result);
+//			pw.write(result);
 			pw.flush();
 		}
 		catch (IOException e){

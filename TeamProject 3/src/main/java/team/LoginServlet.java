@@ -1,4 +1,3 @@
-package team;
 
 import java.io.IOException;
 
