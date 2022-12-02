@@ -7,7 +7,7 @@
 </head>
 
 <body onload="displayJSON();">
-	<div class="page">
+
 		<h1>Profile</h1>
 		<div>
 			
@@ -19,37 +19,44 @@
 		<form onsubmit="updateProfile();" name="editform" method="POST">
 		
 			<h3>Edit your user profile below and submit: </h3>
-			<label for="username" name="username">Username:</label>
-			<input name="username" id="new-username" placeholder="Modify username" />
 			
-			<br>
-			<label for="image">image:</label>
-			<input type="text" id="image" name="image" placeholder="Modify profile picture"><br>
+	    	
+	   		<div class="inputs">
+				<input class="inputs" name="username" id="new-username" placeholder="Modify username" />
+				
+				<br>
+				<input class="inputs" type="text" id="image" name="image" placeholder="Modify profile picture"><br>
 			
-	    	<h4><label for="interest">Interests:</label></h4>
-	   		
-	   		<input id="interest1" type="checkbox" name="interest" class="interest" value="marshall">
-			<label for="interest1"> Marshall</label>
-			<input id="interest2" type="checkbox" name="interest" class="interest" value="viterbi">
-			<label for="interest2"> Viterbi</label>
-			<input  id="interest3" type="checkbox"name="interest" class="interest" value ="dornsife">
-			<label for="interest3">Dornsife</label><br>
-			<input  id="interest4" type="checkbox" name="interest" class="interest" value ="computerScience">
-			<label for="interest4">Computer Science</label>
-			<input  id="interest5" type="checkbox" name="interest" class="interest" value ="csba">
-			<label for="interest5">CSBA</label><br>
-			<input  id="interest6" type="checkbox" name="interest" class="interest" value ="businessAdmin">
-			<label for="interest6">Business Administration</label>
-			<input  id="interest7" type="checkbox" name="interest" class="interest" value ="csgames">
-			<label for="interest7">CS Games</label><br>
-			<input  id="interest8" type="checkbox" name="interest" class="interest" value ="cais">
-			<label for="interest8">CAIS</label>
-			<input  id="interest9" type="checkbox" name="interest" class="interest" value ="athenaHacks">
-			<label for="interest9">Athena Hacks</label>
-			<input  id="interest10" type="checkbox" name="interest" class="interest" value ="scope">
-			<label for="interest10">Scope</label><br></br>
-			<input type="submit">
+	   		</div>
+	   		<div >
+	   			<h4><label for="interest">Interests:</label></h4>
+		   		<input id="interest1" type="checkbox" name="interest" class="interest" value="marshall">
+				<label for="interest1"> Marshall</label>
+				<input id="interest2" type="checkbox" name="interest" class="interest" value="viterbi">
+				<label for="interest2"> Viterbi</label>
+				<input  id="interest3" type="checkbox"name="interest" class="interest" value ="dornsife">
+				<label for="interest3">Dornsife</label><br>
+				<input  id="interest4" type="checkbox" name="interest" class="interest" value ="computerScience">
+				<label for="interest4">Computer Science</label>
+				<input  id="interest5" type="checkbox" name="interest" class="interest" value ="csba">
+				<label for="interest5">CSBA</label><br>
+				<input  id="interest6" type="checkbox" name="interest" class="interest" value ="businessAdmin">
+				<label for="interest6">Business Administration</label>
+				<input  id="interest7" type="checkbox" name="interest" class="interest" value ="csgames">
+				<label for="interest7">CS Games</label><br>
+				<input  id="interest8" type="checkbox" name="interest" class="interest" value ="cais">
+				<label for="interest8">CAIS</label>
+				<input  id="interest9" type="checkbox" name="interest" class="interest" value ="athenaHacks">
+				<label for="interest9">Athena Hacks</label>
+				<input  id="interest10" type="checkbox" name="interest" class="interest" value ="scope">
+				<label for="interest10">Scope</label><br></br>
+			 
+	   		</div>
+	   		<input class="createBttn" type="submit">
 		</form>
+		<br>
+		<br>
+		<br>
 
 		<div class="footer" >
             <a href="HomePage.html"><img class="footer-icon" src="./assets/home-icon.png" alt="home"/></a>
@@ -57,7 +64,9 @@
             <a href="Chat.html"><img class="footer-icon" src="./assets/chat-icon.png" alt="chat"/></a>
             <a href="Profile.html"><img class="footer-icon" src="./assets/user.png" alt="profile"/></a>
         </div>
-	</div>
+        <br>
+        <br>
+	
 		
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script type="text/javascript">
@@ -66,9 +75,9 @@
 				type : "GET",
 				url : "EditProfileServlet",
 				success : function(result) {
-					var name = "<p>Current Username: "+ result.username + "</p>";
-					var image = "<p>Current profile image: <img style='width:104px;height:104px;' src='"+ result.profilePicture + "' alt='profile-pic' /></p>";
-					var interests = "<p>Interests: "+ result.interest + "</p>";
+					var name = "<h3>"+ result.username + "</h3>";
+					var image = "<h3><img style='width:104px;height:104px;' src='"+ result.profilePicture + "' alt='profile-pic' /></h3>";
+					var interests = "<h3>Interests: "+ result.interest + "</h3>";
 					
 					$('#profile-username').html(name);
 					$('#profile-image').html(image);
