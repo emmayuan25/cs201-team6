@@ -25,21 +25,24 @@ public class EditProfileServlet extends HttpServlet{
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			PrintWriter out = response.getWriter();
-			
+			System.out.println("In edit servlet");
 			//TODO change parameter 
 			String usernameChange = request.getParameter("username");
 			String imageChange = request.getParameter("image");
-			
+			System.out.println("new username: "+ usernameChange);
+			System.out.println("new image: " + imageChange);
 			//TODO Get interest list change
-			String[] interestChange=request.getParameterValues("interest");
+			String interestChange = request.getParameterValues("interest");
+//			String interestChange=request.getParameter("interest");
+			System.out.println(interestChange);
 			List<String> interestList = Collections.synchronizedList(new ArrayList<>());
 		
 			
-			for(String i: interestChange) {
-				interestList.add(i);
-			}
-			
-			
+//			for(String i: interestChange) {
+//				interestList.add(i);
+//			}
+//			
+//			System.out.println("Neww interest list:" + interestList);
 			
 			HttpSession session = request.getSession(false);
 			User user = (User) session.getAttribute("user");
@@ -73,14 +76,14 @@ public class EditProfileServlet extends HttpServlet{
 			response.setCharacterEncoding("UTF-8");
 			response.setStatus(HttpServletResponse.SC_OK);
 
-			String userID = request.getParameter("userID");
-			int id = Integer.parseInt(userID);
+			HttpSession session = request.getSession(false);
+			User user = (User) session.getAttribute("user");
+			System.out.println("Edit profile:"+user.getUsername());
+		
 			
-//			User user = JDBCConnector.getUser(id);
+			String result = gson.toJson(user);
 			
-//			String result = gson.toJson(user);
-			
-//			pw.write(result);
+			pw.write(result);
 			pw.flush();
 		}
 		catch (IOException e){
@@ -92,4 +95,3 @@ public class EditProfileServlet extends HttpServlet{
 
 
 }
-
