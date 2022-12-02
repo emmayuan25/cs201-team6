@@ -1,3 +1,4 @@
+package team;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -22,7 +23,7 @@ import org.apache.tomcat.util.codec.binary.StringUtils;
 
 public class JDBCConnector {
 	private static String sql_user = "root";
-	private static String sql_password = "mysql@cs201"; // change this before submission
+	private static String sql_password = "Cupcake1!"; // change this before submission
 	
 	//check user log in
 	//TODO figure out if I return user or int
@@ -49,32 +50,40 @@ public class JDBCConnector {
 	    	statement.setString(1, username);
 	    	statement.setString(2, password);	    	
 	    	rs = statement.executeQuery();
-
-        	while(rs.next()){
-        		user = new User();
-        		user.setUserID(rs.getInt("userID"));
-        		user.setUsername(rs.getString("userName"));
-        		String image= rs.getString("userImage");
-        		if(image==null||image.isBlank()) {
-        			user.setProfilePicture(rs.getString("user.png"));
-        		}else {
-        			user.setProfilePicture(rs.getString("userImage"));
-        		}
-        		
-        		user.setInterestID(rs.getInt("interestID"));
-        	}   
-        	
-        	List<String> interest=getInterestList(user.getInterestID());
-        	System.out.println(interest);
-        	String x="";
-        	for(String p: interest) {
-        		p = p.substring(0,1).toUpperCase() + p.substring(1).toLowerCase();
-        		x+=p + " ";
-        	}
-        	user.setInterests(x);
-        	
-        	
-
+	    	
+	    	int id =0;
+	    	String usern=null;
+	    	String pass = null;
+	    	String image=null;
+	    	int interestID=0;
+	    	
+	    	while(rs.next()) {
+	    		id = rs.getInt("userID");
+	    		usern = rs.getString("userName");
+	    		image=rs.getString("userImage");
+	    		interestID= rs.getInt("interestID");
+	    	}
+	    	
+	    	if(id!=0) {
+	    		user=new User();
+	    		user.setUserID(id);
+	    		user.setInterestID(interestID);
+	    		user.setUsername(username);
+	    		if(image==null||image.isBlank()) {
+	    			user.setProfilePicture("user.png");	  
+	    		}else {
+	    			user.setProfilePicture(image);
+	    		}
+	    		
+	    		List<String> interest=getInterestList(user.getInterestID());
+	        	System.out.println(interest);
+	        	String x="";
+	        	for(String p: interest) {
+	        		p = p.substring(0,1).toUpperCase() + p.substring(1).toLowerCase();
+	        		x+=p + " ";
+	        	}
+	        	user.setInterests(x);
+	    	}
 
   
 	    } catch(SQLException sqle) {
@@ -101,6 +110,7 @@ public class JDBCConnector {
 		    System.out.println(cnfe.getMessage());
 		} 
 		
+		System.out.println("In create new USer");
 		Connection conn = null;
 		Statement st = null;  
 		ResultSet rs = null;
@@ -110,8 +120,8 @@ public class JDBCConnector {
 	    	
 	        conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=" + JDBCConnector.sql_password);
 		    st = conn.createStatement();
-		    
-		    String username = "user.png";
+		
+		    String username = null;
 		    rs = st.executeQuery("SELECT * FROM User WHERE userName='"+userName+"'");
 		    while(rs.next()) {
 		    	username= rs.getString("userName");
@@ -119,8 +129,12 @@ public class JDBCConnector {
 		    
 		    //username already taken
 		    if(username!=null) {
-		    	return null;
+		    	System.out.println("username taken");
+		    	return user;
 		    }
+		    if(userImage==null || userImage.isBlank()||userImage.equals("")) {
+		 		userImage="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png";
+		 	}
 		    
 		    //add to interest table
 		    String listExecute = "INSERT INTO Interest(";
@@ -157,12 +171,9 @@ public class JDBCConnector {
 		 	user.setUserID(userID);
 		 	user.setInterestID(interestID);
 		 	user.setUsername(userName);
-		 	if(userImage==null || userImage.isBlank()) {
-		 		user.setProfilePicture("user.png");
-		 	}else {
-		 		user.setProfilePicture(userImage);
-		 	}
+		 	user.setProfilePicture(userImage);
 		 	
+		 	System.out.println("User created!");
 		 	
 		} catch (SQLException e) {
 			System.out.println("SQL exception in createNewUser() "+ e);
