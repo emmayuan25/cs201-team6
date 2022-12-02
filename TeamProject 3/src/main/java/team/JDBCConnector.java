@@ -1,4 +1,3 @@
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -15,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-
 import org.apache.tomcat.util.codec.binary.StringUtils;
 
 
@@ -23,7 +21,7 @@ import org.apache.tomcat.util.codec.binary.StringUtils;
 
 public class JDBCConnector {
 	private static String sql_user = "root";
-	private static String sql_password = "Cupcake1!"; // change this before submission
+	private static String sql_password = "mysql@cs201"; // change this before submission
 	
 	//check user log in
 	//TODO figure out if I return user or int
@@ -82,7 +80,7 @@ public class JDBCConnector {
 	        		p = p.substring(0,1).toUpperCase() + p.substring(1).toLowerCase();
 	        		x+=p + " ";
 	        	}
-	        	user.setInterests(x);
+	        	//user.setInterests(x);
 	    	}
 
   
@@ -103,101 +101,103 @@ public class JDBCConnector {
 	
 	
 	//TODO what should this return
-	synchronized static public User createNewUser(String userName, String password, String userImage, List<String> interestList) {
-		try {
-		    Class.forName("com.mysql.cj.jdbc.Driver");
-		} catch (ClassNotFoundException cnfe) {
-		    System.out.println(cnfe.getMessage());
-		} 
-		
-		System.out.println("In create new USer");
-		Connection conn = null;
-		Statement st = null;  
-		ResultSet rs = null;
-		User user = null;
-	    try {
-	    	
-	    	
-	        conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=" + JDBCConnector.sql_password);
-		    st = conn.createStatement();
-		
-		    String username = null;
-		    rs = st.executeQuery("SELECT * FROM User WHERE userName='"+userName+"'");
-		    while(rs.next()) {
-		    	username= rs.getString("userName");
+	//TODO what should this return
+		synchronized static public User createNewUser(String userName, String password, String userImage, List<String> interestList) {
+			try {
+			    Class.forName("com.mysql.cj.jdbc.Driver");
+			} catch (ClassNotFoundException cnfe) {
+			    System.out.println(cnfe.getMessage());
+			} 
+			
+			System.out.println("In create new USer");
+			Connection conn = null;
+			Statement st = null;  
+			ResultSet rs = null;
+			User user = null;
+		    try {
+		    	
+		    	
+		        conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=" + JDBCConnector.sql_password);
+			    st = conn.createStatement();
+			
+			    String username = null;
+			    rs = st.executeQuery("SELECT * FROM User WHERE userName='"+userName+"'");
+			    while(rs.next()) {
+			    	username= rs.getString("userName");
+			    }
+			    
+			    //username already taken
+			    if(username!=null) {
+			    	System.out.println("username taken");
+			    	return user;
+			    }
+			    if(userImage==null || userImage.isBlank()||userImage.equals("")) {
+			 		userImage="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png";
+			 	}
+			    
+			    //add to interest table
+			    String listExecute = "INSERT INTO Interest(";
+			    for(int i=0; i<interestList.size()-1;i++) {
+			    	listExecute +=  interestList.get(i)+", ";
+			    }
+			    listExecute +=interestList.get(interestList.size()-1) +") VALUES(";
+			    for(int j=0; j<interestList.size()-1;j++) {
+			    	listExecute += "1, ";
+			    }
+			    listExecute += "1)";
+			    st.executeUpdate(listExecute);
+			    
+			    //get interestID
+			    int interestID = 0;
+			 	
+			 	rs= st.executeQuery("SELECT MAX(interestID) FROM Interest");
+			 	while(rs.next()) {
+			 		interestID=rs.getInt(1);
+			 	}
+			 	
+			 	//insert into user table
+			 	st.executeUpdate("INSERT INTO USER(userName,userImage,password,interestID) VALUES('"+userName+"', '"+userImage+"', '"+ password+"', '"+ interestID+"')" );
+			 	
+			 	//get userID
+			 	rs= st.executeQuery("SELECT * FROM User WHERE userName='"+ userName+"'");
+			 	int userID = 0;
+			 	while(rs.next()){
+			 		userID = rs.getInt("userID");
+			 	}
+			 	
+			 	user = new User();
+			 	
+			 	user.setUserID(userID);
+			 	user.setInterestID(interestID);
+			 	user.setUsername(userName);
+			 	user.setProfilePicture(userImage);
+			 	
+			 	System.out.println("User created!");
+			 	
+			} catch (SQLException e) {
+				System.out.println("SQL exception in createNewUser() "+ e);
+			}finally {
+		    	try {
+		    		if(st!=null) {
+		    			st.close();
+		    		}
+		    		if(conn!=null) {
+		    			conn.close();
+		    		}
+		    		if(rs !=null) {
+		    			conn.close();
+		    		}
+		    	} catch(SQLException sqle) {
+		    		System.out.println("sqle: "+ sqle.getMessage());
+		    	}
 		    }
+		    return user;
 		    
-		    //username already taken
-		    if(username!=null) {
-		    	System.out.println("username taken");
-		    	return user;
-		    }
-		    if(userImage==null || userImage.isBlank()||userImage.equals("")) {
-		 		userImage="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png";
-		 	}
-		    
-		    //add to interest table
-		    String listExecute = "INSERT INTO Interest(";
-		    for(int i=0; i<interestList.size()-1;i++) {
-		    	listExecute +=  interestList.get(i)+", ";
-		    }
-		    listExecute +=interestList.get(interestList.size()-1) +") VALUES(";
-		    for(int j=0; j<interestList.size()-1;j++) {
-		    	listExecute += "1, ";
-		    }
-		    listExecute += "1)";
-		    st.executeUpdate(listExecute);
-		    
-		    //get interestID
-		    int interestID = 0;
-		 	
-		 	rs= st.executeQuery("SELECT MAX(interestID) FROM Interest");
-		 	while(rs.next()) {
-		 		interestID=rs.getInt(1);
-		 	}
-		 	
-		 	//insert into user table
-		 	st.executeUpdate("INSERT INTO USER(userName,userImage,password,interestID) VALUES('"+userName+"', '"+userImage+"', '"+ password+"', '"+ interestID+"')" );
-		 	
-		 	//get userID
-		 	rs= st.executeQuery("SELECT * FROM User WHERE userName='"+ userName+"'");
-		 	int userID = 0;
-		 	while(rs.next()){
-		 		userID = rs.getInt("userID");
-		 	}
-		 	
-		 	user = new User();
-		 	
-		 	user.setUserID(userID);
-		 	user.setInterestID(interestID);
-		 	user.setUsername(userName);
-		 	user.setProfilePicture(userImage);
-		 	
-		 	System.out.println("User created!");
-		 	
-		} catch (SQLException e) {
-			System.out.println("SQL exception in createNewUser() "+ e);
-		}finally {
-	    	try {
-	    		if(st!=null) {
-	    			st.close();
-	    		}
-	    		if(conn!=null) {
-	    			conn.close();
-	    		}
-	    		if(rs !=null) {
-	    			conn.close();
-	    		}
-	    	} catch(SQLException sqle) {
-	    		System.out.println("sqle: "+ sqle.getMessage());
-	    	}
-	    }
-	    return user;
-	    
-	}
+		}
 	
 	//TODO Chat and post table 
 
+	@SuppressWarnings("resource")
 	synchronized static	public void deleteUser(User profile){
 			
 		try {
@@ -210,7 +210,7 @@ public class JDBCConnector {
 		ResultSet rs = null;
 		PreparedStatement psmt =null;
 		try{
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=Cupcake1!");
+	        conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=" + JDBCConnector.sql_password);
             st = conn.createStatement();
             String username = profile.getUsername();
             rs= st.executeQuery("Select * from User where userName='"+ username+"'");
@@ -267,7 +267,7 @@ public class JDBCConnector {
 	}
 		
 		
-	synchronized static	public List<User> searchKeyword(String name, Integer myID){
+	synchronized static	public User searchKeyword(String name){
 	       
 		try {
 		    Class.forName("com.mysql.cj.jdbc.Driver");
@@ -277,59 +277,65 @@ public class JDBCConnector {
 		
 		List<User> returnUser = Collections.synchronizedList(new ArrayList<>());
 	    Connection conn = null;
-		Statement st = null;  
+		PreparedStatement ps = null;  
 		ResultSet rs = null;
+		
 	    
 	    try{
-	    	conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=Cupcake1!");
-	        st = conn.createStatement();
-	        
-	        
-	       
-	        rs= st.executeQuery("Select * from User WHERE userName='"+ name+"'");
+		   	conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=" + JDBCConnector.sql_user + "&password=" + JDBCConnector.sql_password);
+		   	ps = conn.prepareStatement("SELECT * FROM User WHERE userName=?");
+		   	
+		   	
+		   	ps.setString(1, name);
+	        rs = ps.executeQuery();
+
        
             while(rs.next()){
             	User user = new User();
             	int userID = rs.getInt("userID");
                 String username = rs.getString("userName");
+                
+                System.out.println(username);
+                
                 String userImage= rs.getString("userImage");
                 user.setUserID(userID);
                 user.setUsername(username);
                 user.setProfilePicture(userImage); 
-                    returnUser.add(user);
-                }
+                
+                return user;
+            }
 	  
 	                //check the users with similar interest
 	            
-	            rs= st.executeQuery("SELECT * FROM Interest WHERE "+ name + "=1");
-	            
-	            List<Integer> idList= new ArrayList<Integer>();
-	            while(rs.next()){
-	                	int ID = rs.getInt("interestID");
-	                	idList.add(ID);
-	            }
-	            for(Integer i: idList) {
-	            	ResultSet rs2 = st.executeQuery("SELECT u.userName, u.userID, u.userImage, i.interestID FROM User u, Interest i WHERE u.interestID=i.interestID and i.interestID="+i);
-	            	while(rs2.next()) {
-	            		if(i!=myID) {
-	            			User user = new User();
-	            			String username = rs2.getString("userName");
-	            			String userImage = rs2.getString("userImage");
-	            			int userID = rs2.getInt("userID");
-		                	user.setUserID(userID);
-		                	user.setUsername(username);
-		                	user.setProfilePicture(userImage);
-		                	returnUser.add(user);
-	            		}
-	            	}
-				}
+//	            rs= st.executeQuery("SELECT * FROM Interest WHERE "+ name + "=1");
+//	            
+//	            List<Integer> idList= new ArrayList<Integer>();
+//	            while(rs.next()){
+//	                	int ID = rs.getInt("interestID");
+//	                	idList.add(ID);
+//	            }
+//	            for(Integer i: idList) {
+//	            	ResultSet rs2 = st.executeQuery("SELECT u.userName, u.userID, u.userImage, i.interestID FROM User u, Interest i WHERE u.interestID=i.interestID and i.interestID="+i);
+//	            	while(rs2.next()) {
+//	            		if(i!=myID) {
+//	            			User user = new User();
+//	            			String username = rs2.getString("userName");
+//	            			String userImage = rs2.getString("userImage");
+//	            			int userID = rs2.getInt("userID");
+//		                	user.setUserID(userID);
+//		                	user.setUsername(username);
+//		                	user.setProfilePicture(userImage);
+//		                	returnUser.add(user);
+//	            		}
+//	            	}
+//				}
 	        
 	    }catch (SQLException sqle) {
 			System.out.println ("SQLException: " + sqle.getMessage());
 	    }finally {
 	    	try {
-	    		if(st!=null) {
-	    			st.close();
+	    		if(ps!=null) {
+	    			ps.close();
 	    		}
 	    		if(conn!=null) {
 	    			conn.close();
@@ -343,7 +349,7 @@ public class JDBCConnector {
 	    	}
 	    }
 	
-	    return returnUser;
+	    return null;
 	    
 	}
 	
@@ -361,7 +367,7 @@ public class JDBCConnector {
 		ResultSet rs = null;
     	
     	try {
-    		conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=Cupcake1!");
+	        conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=" + JDBCConnector.sql_password);
     		st=conn.createStatement();
     		rs=st.executeQuery("SELECT * FROM Interest WHERE interestID=" +id);
 			while(rs.next()) {
@@ -440,7 +446,7 @@ public class JDBCConnector {
 		ResultSet rs = null;
 		 int interestID = user.getInterestID();
 		try {
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=Cupcake1!");
+	        conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=" + JDBCConnector.sql_password);
 			st=conn.createStatement();
 			//update user table
 			st.executeUpdate("UPDATE User SET userName='"+user.getUsername()+"', userImage='"+user.getProfilePicture()+"' WHERE userID="+user.getUserID());
@@ -504,7 +510,7 @@ public class JDBCConnector {
 	   ResultSet rs = null;
 	  
 	   try {
-		   conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=Cupcake1!");
+	       conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=" + JDBCConnector.sql_password);
 		   st=conn.createStatement();
 		   rs= st.executeQuery("SELECT p.postID, p.postText, p.postImage, p.interestID, u.userName, u.userImage FROM Post p, User u WHERE p.userID = U.userID");
 		   while(rs.next()) {
@@ -551,6 +557,7 @@ public class JDBCConnector {
 	   
 	   int interestID=user.getInterestID();
 	   
+	   
 	   //get from interest table which interest the user has
 	  List<String> interestList = getInterestList(interestID);
 	   
@@ -564,7 +571,7 @@ public class JDBCConnector {
 	  
 	   
 		   try {
-			   conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=Cupcake1!");
+		       conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=" + JDBCConnector.sql_password);
 			   st=conn.createStatement();
 			   st2=conn.createStatement();
 			   //go through each interest in post interest table 
@@ -634,7 +641,7 @@ public class JDBCConnector {
 	   String interest = post.getInterest();
 	   
 	   try {
-		   conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=Cupcake1!");
+	       conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=" + JDBCConnector.sql_password);
 		   st=conn.createStatement();
 	   //insert post to postinterest table
 	 	st.executeUpdate("INSERT INTO PostInterest("+interest+") VALUES(1)");
@@ -688,7 +695,7 @@ public class JDBCConnector {
 	   ResultSet rs2 = null;
 		   
 	   try {
-		   	conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=" + JDBCConnector.sql_password);
+		   	conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=" + JDBCConnector.sql_user + "&password=" + JDBCConnector.sql_password);
 		   	
 		   	// get the receiverID for the chat messages where senderID == input_userID
 			ps = conn.prepareStatement("SELECT toUID FROM ChatMessage WHERE fromUID=?");
@@ -762,39 +769,33 @@ public class JDBCConnector {
  
    
  	
-   synchronized public static void createMessage(int userID, int toID, String message){
-	   try {
+   synchronized public static void addMessage(int input_userID, int input_friendID, String input_messageText){
+	   	try {
 		    Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException cnfe) {
 		    System.out.println(cnfe.getMessage());
 		} 
-	   Connection conn = null;
-		Statement st = null;  
-		ResultSet rs = null;
+	   	
+	   	Connection conn = null;
+	   	PreparedStatement ps = null;
 		
 		try {
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=Cupcake1!");
-			st=conn.createStatement();
-			st.executeUpdate("INSERT INTO ChatMessage(fromUID,toUID,messageText,createdAt) VALUES("+userID+", "+toID+", '"+message+"', CURRENT_TIMESTAMP)");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=" + JDBCConnector.sql_user + "&password=" + JDBCConnector.sql_password);
+			ps = conn.prepareStatement("INSERT INTO ChatMessage (fromUID, toUID, messageText, createdAt) VALUES (?, ?, ?, CURRENT_TIMESTAMP)");
+			ps.setInt(1, input_userID);
+			ps.setInt(2, input_friendID);
+			ps.setString(3, input_messageText);
+			ps.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("sqle: "+ e.getMessage());
-		}finally {
+		} finally {
 			try {
-	    		if(st!=null) {
-	    			st.close();
-	    		}
-	    		if(conn!=null) {
-	    			conn.close();
-	    		}
-	    		if(rs !=null) {
-	    			conn.close();
-	    		}
+	    		if(ps != null) ps.close();
+	    		if(conn != null) conn.close();
 	    	} catch(SQLException sqle) {
 	    		System.out.println("sqle: "+ sqle.getMessage());
 	    	}
-	
 		}
-	  
    }
 
    // get a specific list of chat messages
@@ -814,7 +815,7 @@ public class JDBCConnector {
 	   ResultSet rs = null;
 		   
 	   try {
-		   	conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=" + JDBCConnector.sql_password);
+		   	conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=" + JDBCConnector.sql_user + "&password=" + JDBCConnector.sql_password);
 		   	
 		   	// get the chat messages between input_userID and input_friendID
 			ps = conn.prepareStatement("SELECT fromUID, toUID, messageText, createdAt FROM ChatMessage WHERE (fromUID=? AND toUID=?) OR (fromUID=? AND toUID=?)");
@@ -916,6 +917,7 @@ public class JDBCConnector {
 		return chat_messages_list;
 	}
    
+   
    public static User getUser(int input_userID) {
 	    try {
 	        Class.forName("com.mysql.cj.jdbc.Driver");
@@ -968,6 +970,61 @@ public class JDBCConnector {
 	    
 		return null;
 	}
+   
+   
+   public static User getUserID(String name) {
+	   try {
+	        Class.forName("com.mysql.cj.jdbc.Driver");
+	    } catch (ClassNotFoundException cnfe) {
+	        System.out.println(cnfe.getMessage());
+	    } 
+	   
+	   
+	    Connection conn = null;
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+	       
+	    try {
+	        conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=" + JDBCConnector.sql_password);
+	           
+	           // get the chat messages between input_userID and input_friendID
+	        ps = conn.prepareStatement("SELECT * FROM User WHERE userName=?");
+	        ps.setString(1, name);
+	        rs = ps.executeQuery();
+	        
+	        int userID = 0;
+	        String userName = "";
+	        String userImage = "";
+	        int interestID = 0;
+	        
+	        while(rs.next()) {
+	        	userID = rs.getInt("userID");
+	            userName = rs.getString("userName");
+	            userImage = rs.getString("userImage");
+	            interestID = rs.getInt("interestID");
+	        }
+
+	        User u = new User();
+	        u.setUserID(userID);
+	        u.setProfilePicture(userImage);
+	        u.setUsername(userName);
+	        u.setInterestID(interestID);
+
+	        return u;
+	    } catch (SQLException e) {
+			System.out.println("SQL exception in Server "+ e);
+		} finally {
+			try {
+				if(rs != null) rs.close();
+				if(ps != null) ps.close();
+				if(conn != null) conn.close();
+			} catch(SQLException sqle) {
+				System.out.println("sqle: "+ sqle.getMessage());
+			}
+		}
+	    
+		return null;
+   }
  		
 
     
