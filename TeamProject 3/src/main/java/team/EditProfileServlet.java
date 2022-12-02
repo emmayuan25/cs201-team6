@@ -1,4 +1,4 @@
-
+package team;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -27,30 +27,42 @@ public class EditProfileServlet extends HttpServlet{
 			PrintWriter out = response.getWriter();
 			System.out.println("In edit servlet");
 			//TODO change parameter 
+			String imageChange=null;
 			String usernameChange = request.getParameter("username");
-			String imageChange = request.getParameter("image");
+			imageChange = request.getParameter("image");
 			System.out.println("new username: "+ usernameChange);
 			System.out.println("new image: " + imageChange);
 			//TODO Get interest list change
-			String interestChange = request.getParameterValues("interest");
-//			String interestChange=request.getParameter("interest");
-			System.out.println(interestChange);
+			String interest = request.getParameter("list");
+			if(interest==null) {
+				
+			}
+			String[]  interestChange= interest.split(",");
+			
+			
 			List<String> interestList = Collections.synchronizedList(new ArrayList<>());
 		
 			
-//			for(String i: interestChange) {
-//				interestList.add(i);
-//			}
-//			
-//			System.out.println("Neww interest list:" + interestList);
+			for(String i: interestChange) {
+				interestList.add(i);
+			}
 			
+			System.out.println("Neww interest list: " + interestList);
 			HttpSession session = request.getSession(false);
 			User user = (User) session.getAttribute("user");
 			
 			user.setUsername(usernameChange);
+			if(imageChange==null|| imageChange.equals("")) {
+				imageChange="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png";
+			}
 			user.setProfilePicture(imageChange);
 			
-			
+			String x="";
+        	for(String p: interestList) {
+        		p = p.substring(0,1).toUpperCase() + p.substring(1).toLowerCase();
+        		x+=p + " ";
+        	}
+        	user.setInterests(x);
 		
 			int id=JDBCConnector.updateProfile(user, interestList);
 			
