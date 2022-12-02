@@ -3,19 +3,115 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+	body{
+		background-color: #990000;
+		text-align:center;
+		align-items:center;
+		font-family: arial;
+		
+	}
+	
+	h1{
+		color:white;
+		text-align:center;
+		margin-bottom: 15px;
+		
+	}
+	
+	lable{
+		color: white;
+		font-size: 25px;
+		margin-bottom: 5px;
+		
+	}
+	
+	form{
+		display:grid;
+		align-items:center;
+		width: 500px;
+		padding-top: 15px;
+		margin: auto;
+		
+	}
+	
+	.interest{
+		width: 300px;
+		align-items:center;
+		margin:auto;
+		height: 40px;
+		border-radius:20px;
+	}
+	
+	.interest lable{
+		margin-bottom: 10px;
+	}
+	
+	.inputs{
+		margin: auto;
+		margin-bottom: 15px;
+		width: 300px;
+		text-align:left;
+		
+	}
+	
+	
+	input{
+		height: 40px;
+		width: 100%;
+		margin-bottom: 20px;
+		border-radius: 20px;
+		border: white;
+	}
+	
+	
+	
+	.createBttn{
+		width: 300px;
+		background-color: rgb(255, 199, 44);
+		color: white;
+		font-size: 15px;
+		margin: auto;
+	}
+	
+	
+	
+		.homebttn {
+		text-decoration: none;
+		color:  #990000;
+		border: 1px sold white;
+		background-color: white;
+		width: 200px;
+		height: 40px;
+		border-radius: 10px;
+		box-shadow: none;
+	}
+	
+	
+	
+	
+	
+</style>
 </head>
-<body style="background-color: #990000">
+<body >
 
-	<div style="background-color: #990000; height: 600px;">
-		<div style="text-align: center; color: white;">
-			<h1>Create Post</h1>
-			<form action="CreatePostServlet" name="createForm" method="POST">
-				<lable for="image">image:<lable> <input type="text"
-					id="image" name="image"> <br>
-				<lable for="text">text:<lable> <input type="text"
-					id="text" name="text"> <br>
-				<label for="interest">Interest:</label> <select id="interest"
-					name="interestList">
+		<h1>Create Post</h1>
+		<form action="CreatePostServlet" name="createForm" method="POST">
+				<div class="inputs">
+					<lable for="image">Insert Image URL:</lable> 
+					<br>
+					<input type="text"id="image" name="image" required >
+					<br>
+					<lable for="text"> Insert Caption: </lable>
+					<br>
+					<input type="text" id="text" name="text" required>
+					<br>
+				
+				</div>
+				
+				<lable class="interestLable" for="interest">Choose an Interest:</lable>
+				<br>
+				<select id="interest" class="interest" name="interestList" >
 					<option value="marshall">Marshall</option>
 					<option value="viterbi">Viterbi</option>
 					<option value="dornsife">Dornsife</option>
@@ -27,12 +123,12 @@
 					<option value="cais">CAIS</option>
 					<option value="athenaHacks">Athena Hacks</option>
 					<option value="scope">Scope</option>
-				</select> <br>
-				<input type="submit">
-			</form>
-
-			<li><a href="HomePage.jsp">Home Page</a></li>
-		</div>
-	</div>
+				</select>
+			 <br>
+			<input type="submit" class="createBttn" value="Submit"> 
+		</form>
+		<br>
+		<a href="HomePage.jsp"><input class="homebttn" type="button" value="Home Page"/></a>
+		
 </body>
 </html>
