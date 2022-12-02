@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.apache.tomcat.util.codec.binary.StringUtils;
+
 
 
 
@@ -52,9 +54,26 @@ public class JDBCConnector {
         		user = new User();
         		user.setUserID(rs.getInt("userID"));
         		user.setUsername(rs.getString("userName"));
-        		user.setProfilePicture(rs.getString("userImage"));
+        		String image= rs.getString("userImage");
+        		if(image==null||image.isBlank()) {
+        			user.setProfilePicture(rs.getString("user.png"));
+        		}else {
+        			user.setProfilePicture(rs.getString("userImage"));
+        		}
+        		
         		user.setInterestID(rs.getInt("interestID"));
         	}   
+        	
+        	List<String> interest=getInterestList(user.getInterestID());
+        	System.out.println(interest);
+        	String x="";
+        	for(String p: interest) {
+        		p = p.substring(0,1).toUpperCase() + p.substring(1).toLowerCase();
+        		x+=p + " ";
+        	}
+        	user.setInterests(x);
+        	
+        	
 
 
   
@@ -92,7 +111,7 @@ public class JDBCConnector {
 	        conn = DriverManager.getConnection("jdbc:mysql://localhost/T2T?user=root&password=" + JDBCConnector.sql_password);
 		    st = conn.createStatement();
 		    
-		    String username = null;
+		    String username = "user.png";
 		    rs = st.executeQuery("SELECT * FROM User WHERE userName='"+userName+"'");
 		    while(rs.next()) {
 		    	username= rs.getString("userName");
@@ -138,7 +157,12 @@ public class JDBCConnector {
 		 	user.setUserID(userID);
 		 	user.setInterestID(interestID);
 		 	user.setUsername(userName);
-		 	user.setProfilePicture(userImage);
+		 	if(userImage==null || userImage.isBlank()) {
+		 		user.setProfilePicture("user.png");
+		 	}else {
+		 		user.setProfilePicture(userImage);
+		 	}
+		 	
 		 	
 		} catch (SQLException e) {
 			System.out.println("SQL exception in createNewUser() "+ e);
