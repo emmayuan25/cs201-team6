@@ -8,6 +8,29 @@
      background-color: #FFCC00;
   }
   
+  .footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 100vw;
+    height: 3.5rem;
+    background-color: #F9F9F9;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    position: fixed;
+    bottom: 0;
+}
+
+  
+  
+  .footer-icon {
+    width: 2rem;
+    justify-content: space-evenly;
+    display: flex;
+    margin-right: 0.5rem;
+    margin-top: 0.5rem;
+}
+  
   .content{
   	text-align: center;
   	color: white;
