@@ -1,12 +1,10 @@
-.newBackgroundColor{
-    background-color: #990000;
-    height: 600px;
+
+  body{
+  	background-color: #990000;
+  	font-family: Arial;
   }
   
-  button{
-    width: 30px;
-     background-color: #FFCC00;
-  }
+  
   
   .content{
   	text-align: center;
@@ -14,3 +12,60 @@
   	
   }
   
+  h1{
+  	margin-top: 120px;
+  	font-size: 40px;
+  }
+  
+  .form{
+  
+  	display:grid;
+	align-items:center;
+	width: 300px;
+	padding-top: 15px;
+	margin: auto;
+	text-align:center;
+  }
+  
+  	input{
+		height: 40px;
+		width: 100%;
+		margin-bottom: 20px;
+		border-radius: 20px;
+		border: white;
+		background-color: rgb(88, 93, 99);
+		color:white;
+		
+	}
+	
+	::placeholder{
+		padding-left: 10px;
+		color:white;
+	}
+	
+	.bttn{
+		width: 300px;
+		background-color: white;
+		color: #990000;
+		font-size: 15px;
+		margin: auto;
+		height: 40px;
+
+	}
+	
+	button{
+		width: 300px;
+		background-color: rgb(255, 199, 44);
+		color: white;
+		font-size: 15px;
+		margin: auto;
+		border-radius: 20px;
+		border: white;
+		height: 40px;
+	}
+	
+	a{
+		color: white;
+		text-decoration:none;
+	}
+	
