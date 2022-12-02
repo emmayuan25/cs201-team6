@@ -1,4 +1,3 @@
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -22,26 +21,31 @@ public class RegisterServlet extends HttpServlet{
 		}
 		//sign up 
 		protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-			PrintWriter out = response.getWriter();
-			
-			//TODO change names
-			String username = request.getParameter("username");
-			String password = request.getParameter("password");
-			String userImage = request.getParameter("image");
-			
-			
-			//TODO get interest list
-			String[] interest = request.getParameterValues("interest");
-			List<String> interestList = Collections.synchronizedList(new ArrayList<>());
-			
-			for(String i: interest) {
-				interestList.add(i);
-			}
-			
-			User user = (User) JDBCConnector.createNewUser(username, password, userImage, interestList);
-			
 			
 			try {
+				PrintWriter out = response.getWriter();
+				String userImage=null;
+				//TODO change names
+				String username = request.getParameter("username");
+				String password = request.getParameter("password");
+				userImage = request.getParameter("image");
+				if(userImage.equals("")||userImage==null) {
+					userImage="";
+					System.out.println("No image");
+				}
+				System.out.println("username");
+				System.out.println("password");
+				
+				//TODO get interest list
+				String[] interest = request.getParameterValues("interest");
+				List<String> interestList = Collections.synchronizedList(new ArrayList<>());
+				
+				for(String i: interest) {
+					interestList.add(i);
+				}
+				
+				User user = (User) JDBCConnector.createNewUser(username, password, userImage, interestList);
+				
 				
 				String destPage ="Register.html";
 				
@@ -49,10 +53,6 @@ public class RegisterServlet extends HttpServlet{
 					HttpSession session = request.getSession(true);
 					session.setAttribute("user", user);
 					destPage ="HomePage.html"; 
-				}else {
-					//TODO send response message
-					String message = "Username already taken";
-					request.setAttribute("message", message);
 				}
 				
 				RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);
@@ -67,4 +67,3 @@ public class RegisterServlet extends HttpServlet{
 		
 	
 }
-
