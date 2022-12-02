@@ -16,7 +16,7 @@
 			<div id="profile-username"></div>
 			<div id="profile-interests"></div>
 		</div>
-		<form action="EditProfileServlet" name="editform" method="POST">
+		<form onsubmit="updateProfile();" name="editform" method="POST">
 		
 			<h3>Edit your user profile below and submit: </h3>
 			<label for="username" name="username">Username:</label>
@@ -28,30 +28,30 @@
 			
 	    	<h4><label for="interest">Interests:</label></h4>
 	   		
-	   		<input id="interest1" type="checkbox" name="interest" value="marshall">
+	   		<input id="interest1" type="checkbox" name="interest" class="interest" value="marshall">
 			<label for="interest1"> Marshall</label>
-			<input id="interest2" type="checkbox" name="interest" value="viterbi">
+			<input id="interest2" type="checkbox" name="interest" class="interest" value="viterbi">
 			<label for="interest2"> Viterbi</label>
-			<input  id="interest3" type="checkbox" name="interest" value ="dornsife">
+			<input  id="interest3" type="checkbox"name="interest" class="interest" value ="dornsife">
 			<label for="interest3">Dornsife</label><br>
-			<input  id="interest4" type="checkbox" name="interest" value ="computerScience">
+			<input  id="interest4" type="checkbox" name="interest" class="interest" value ="computerScience">
 			<label for="interest4">Computer Science</label>
-			<input  id="interest5" type="checkbox" name="interest" value ="csba">
+			<input  id="interest5" type="checkbox" name="interest" class="interest" value ="csba">
 			<label for="interest5">CSBA</label><br>
-			<input  id="interest6" type="checkbox" name="interest" value ="businessAdmin">
+			<input  id="interest6" type="checkbox" name="interest" class="interest" value ="businessAdmin">
 			<label for="interest6">Business Administration</label>
-			<input  id="interest7" type="checkbox" name="interest" value ="csgames">
+			<input  id="interest7" type="checkbox" name="interest" class="interest" value ="csgames">
 			<label for="interest7">CS Games</label><br>
-			<input  id="interest8" type="checkbox" name="interest" value ="cais">
+			<input  id="interest8" type="checkbox" name="interest" class="interest" value ="cais">
 			<label for="interest8">CAIS</label>
-			<input  id="interest9" type="checkbox" name="interest" value ="athenaHacks">
+			<input  id="interest9" type="checkbox" name="interest" class="interest" value ="athenaHacks">
 			<label for="interest9">Athena Hacks</label>
-			<input  id="interest10" type="checkbox" name="interest" value ="scope">
+			<input  id="interest10" type="checkbox" name="interest" class="interest" value ="scope">
 			<label for="interest10">Scope</label><br></br>
 			<input type="submit">
 		</form>
 
-		<div class="footer">
+		<div class="footer" >
             <a href="HomePage.html"><img class="footer-icon" src="./assets/home-icon.png" alt="home"/></a>
             <a href="Search.html"><img class="footer-icon" src="./assets/search-icon.png" alt="search"/></a>
             <a href="Chat.html"><img class="footer-icon" src="./assets/chat-icon.png" alt="chat"/></a>
@@ -85,31 +85,39 @@
 		};
 		
 	function updateProfile(){
-			var selectedInterest = new Array();
-			$('input[name="interest"]:checked').each(function() {
-				selectedInterest.push(this.value);
-			});
-			alert(selectedInterest);
-			$.ajax({
-				type : "POST",
-				url : "EditProfileServlet",
-				dataType:"json",
-				data: {
-					username: editform.username.value,
-					image: editform.image.value,
-					interest: selectedInterest
-				},
-				success : function(result) {
-					
-
-					
-				},
-				error: function(errorMessage) {
-					$('#showing').html('ERROR');
+			
+		var list = [];
+			$('.interest').each(function(){
+				if($(this).is(":checked")){
+					list.push($(this).val());
 				}
 			});
+			list = list.toString();
+			if(list===''){
+				alert('Must select interest');
+			}else{
+				$.ajax({
+					type : "POST",
+					url : "EditProfileServlet",
+					data: {
+						username: editform.username.value,
+						image: editform.image.value,
+						list: list
+					},
+					success : function(result) {
+						displayJSON();
+		
+						
+					},
+					error: function(errorMessage) {
+						$('#showing').html('ERROR');
+					}
+				});
+			}
+			
+			
+			
 	
-			return false;
 		};
 	
 	</script>
