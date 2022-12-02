@@ -1,3 +1,4 @@
+package team;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,36 +19,28 @@ public class DisplayServlet extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 
 	//get the posts to display
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+	
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			
-			PrintWriter out = response.getWriter();
-			Gson gson = new Gson();
-			
+			PrintWriter pw = response.getWriter();
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.setStatus(HttpServletResponse.SC_OK);
+
 			HttpSession session = request.getSession(false);
 			User user = (User) session.getAttribute("user");
-			System.out.println("here");
-			
-			List<Post> postList = JDBCConnector.displayPosts(user);
-			response.setContentType("application/json"); 
-			out.print(gson.toJson(postList));	
-			out.flush();
-			out.close();
-			
-			
-//			//TODO send out postList to js
-//			//this will send the list of post objects to the js function calling this class
-//			//TODO change "list" name
-//			request.setAttribute("list", postList);
-//			//TODO add JSP file name
-//			request.getRequestDispatcher("JSP FILE NAME").forward(request, response);
-			
-			
-			
-		} catch (IOException e) {
-			System.out.println("IOException in DisplayServlet: "+ e);
-		} 
+			System.out.println("Edit profile:"+user.getUsername());
 		
-		
-	}
+			
+			String result = gson.toJson(user);
+			
+			pw.write(result);
+			pw.flush();
+		}
+		catch (IOException e){
+			e.printStackTrace();
+		}
+	}	
 }
