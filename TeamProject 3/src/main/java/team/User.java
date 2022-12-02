@@ -14,11 +14,19 @@ public class User {
 	private String username;
 	private String profilePicture;
 	private int interestID;
+	private String interest;
 //	private ArrayList<Integer> interestID; // maybe delete this?
 //	private ArrayList<Integer> followingID; // maybe delete this?
 //	private static String connectionURL;
 	
 	
+	public void setInterests(String s) {
+		this.interest=s;
+	}
+	
+	public String getInterests() {
+		return interest;
+	}
 	public void setUserID(int id) {
 		this.userID=id;
 	}
