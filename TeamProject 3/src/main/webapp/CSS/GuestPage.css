@@ -1,0 +1,40 @@
+body{
+	background-color: #990000;
+	align-items:center;
+}
+
+header{
+	color: white;
+	text-align:center;
+	align-items:center;
+	display: flex;
+}
+
+.result{
+	align-items: center;
+	border: 1px solid white;
+	margin:auto;
+}
+
+.post{
+	border: 1px solid black;
+	background-color:black;
+	width: 400px;
+	align-items:center;
+	border-radius:15px;
+	text-align: center;
+	
+}
+
+.caption{
+	background-color:white;
+	color:black;
+	text-align: left;
+}
+
+.profile{
+	display:flex;
+	vertical-align:center;
+	margin-left:10px;
+}
+
