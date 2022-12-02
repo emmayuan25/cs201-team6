@@ -1,15 +1,83 @@
-.newBackgroundColor{
-    background-color: #990000;
-    height: 600px;
-  }
-  
-  button{
-    width: 30px;
-     background-color: #FFCC00;
-  }
-  
-  .footer {
+body{
+	background-color: #990000;
+	align-items:center;
+	margin:auto;
+	font-family:arial;
+	text-align:center;
+}
+
+header{
+	color: white;
+	align-items:center;
+	display: flex;
+	padding: 40px;
+}
+h1{
+	text-align:center;
+	margin:auto;
+	font-size: 60px;
+}
+
+
+
+.result{
+	align-items: center;
+	
+	text-align:center;
+	margin:auto;
+}
+
+.post{
+	
+	background-color:black;
+	width:500px;
+	align-items:center;
+	border-radius:15px;
+	margin: auto;
+}
+
+
+.caption{
+	background-color:rgb(255, 199, 44);
+	color:black;
+	text-align: left;
+	width:100%;
+	
+	
+}
+.caption p{
+	padding-right: 10px;
+	
+	width: 90%;
+	margin: auto;
+}
+
+
+.profile{
+	display:flex;
+	vertical-align:center;
+	margin-left:10px;
+}
+
+.profile p{
+	width: 100%;
+}
+.homebttn {
+		text-decoration: none;
+		color:  white;
+		background-color:rgb(255, 199, 44);
+		width: 200px;
+		height: 40px;
+		border-radius: 10px;
+		box-shadow: none;
+		margin-bottom: 20px;
+		border:none;
+	}
+	
+
+.footer {
     display: flex;
+    border: 1px solid white;
     flex-direction: row;
     justify-content: space-evenly;
     width: 100vw;
@@ -21,37 +89,10 @@
     bottom: 0;
 }
 
-  
-  
-  .footer-icon {
+.footer-icon {
     width: 2rem;
     justify-content: space-evenly;
     display: flex;
     margin-right: 0.5rem;
     margin-top: 0.5rem;
-}
-
-  .header-icon {
-    width: 12rem;
-    justify-content: space-evenly;
-    display: flex;
-    margin-right: 0.5rem;
-    margin-top: 0.5rem;
-}
-  
-  .content{
-  	text-align: center;
-  	color: white;
-  	
-  }
-.home {
-  width: 46px;
-  height: 44px;
-  background: url(img_navsprites.gif) 0 0;
-}
-
-.next {
- width: 43px;
-  height: 44px;
-  background: url(img_navsprites.gif) -91px 0;
 }
