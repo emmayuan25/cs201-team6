@@ -67,7 +67,7 @@
 				url : "EditProfileServlet",
 				success : function(result) {
 					var name = "<p>Current Username: "+ result.username + "</p>";
-					var image = "<p>Current profile image: <img style='width:10vw;' src='"+ result.profilePicture + "' alt='profile-pic' /></p>";
+					var image = "<p>Current profile image: <img style="width:104px;height:104px;" src='"+ result.profilePicture + "' alt='profile-pic' /></p>";
 					var interests = "<p>Interests: "+ result.interest + "</p>";
 					
 					$('#profile-username').html(name);
