@@ -14,31 +14,48 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/CreatePostServlet")
 public class CreatePostServlet extends HttpServlet{
 	
+	private static final long serialVersionUID = 1L;
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			
+			System.out.println("In create post");
 			PrintWriter out = response.getWriter();
 			//TODO change parameter 
-			String image = request.getParameter("image");
-			String text = request.getParameter("text");
+			String image= null;
+			String text=null;
+			image = request.getParameter("image");
+			text = request.getParameter("text");
 			String interest = request.getParameter("interestList");
-			//https://www.dariawan.com/tutorials/java/java-sql-timestamp-examples/
-			long now = System.currentTimeMillis();
-			Timestamp sqlTimestamp = new Timestamp(now);
 			
+			System.out.println(image);
+			System.out.println(text);
 			
-			Post post = new Post();
-			post.setPostText(text);
-			post.setPostImage(image);
-			post.setTimeStamp(sqlTimestamp);
-			post.setInterest(interest);	
-
-			HttpSession session = request.getSession(false);
-			User user = (User) session.getAttribute("user");
+			String destPage=null;
+			if(image==null ||text==null) {
+				destPage="CreatePost.html";
+			}else {
+				//https://www.dariawan.com/tutorials/java/java-sql-timestamp-examples/
+				long now = System.currentTimeMillis();
+				Timestamp sqlTimestamp = new Timestamp(now);
+				
+				
+				Post post = new Post();
+				post.setPostText(text);
+				post.setPostImage(image);
+				post.setTimeStamp(sqlTimestamp);
+				post.setInterest(interest);	
+	//
+//				HttpSession session = request.getSession(false);
+//				User user = (User) session.getAttribute("user");
+				
+				User user = new User();
+				user.setUserID(3);
+				
+				JDBCConnector.createPost(user, post);
+				destPage= "HomePage.html";
+			}
 			
-			
-			JDBCConnector.createPost(user, post);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("CreatePost.html");
+			RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);
 			dispatcher.forward(request, response);
 			
 		} catch (IOException e) {
