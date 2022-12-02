@@ -24,6 +24,7 @@ public class DisplayServlet extends HttpServlet{
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			
+			System.out.println("in display");
 			PrintWriter pw = response.getWriter();
 			Gson gson = new Gson();
 			
@@ -31,19 +32,12 @@ public class DisplayServlet extends HttpServlet{
 			User user = (User) session.getAttribute("user");
 			
 			List<Post> postList = JDBCConnector.displayPosts(user);
-			out.print(gson.toJson(postList));	
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			response.setStatus(HttpServletResponse.SC_OK);
-
-			HttpSession session = request.getSession(false);
-			User user = (User) session.getAttribute("user");
-		
-			String result = gson.toJson(user);
-			pw.print(gson.toJson(postList));	
-
-			pw.write(result);
+				
+			String result = gson.toJson(postList);
+			response.setContentType("application/json");	
+			pw.print(result);
 			pw.flush();
+			pw.close();
 		}
 		catch (IOException e){
 			e.printStackTrace();
