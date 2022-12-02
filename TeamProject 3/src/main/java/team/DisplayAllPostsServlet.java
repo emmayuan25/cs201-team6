@@ -19,20 +19,17 @@ public class DisplayAllPostsServlet extends HttpServlet{
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			
-			PrintWriter out = response.getWriter();
+			PrintWriter pw = response.getWriter();
 			Gson gson = new Gson();
-			//get a list of Post class which are the post 
+			
 			List<Post> postList = JDBCConnector.allPosts();
-			response.setContentType("application/json"); 
-			out.print(gson.toJson(postList));	
-			out.flush();
-			out.close();
-//			//TODO send out list to js
-//			//this will send the list of post objects to the js function calling this class
-//			//TODO change "list" name
-//			request.setAttribute("list", postList);
-//			//TODO add JSP file name
-//			request.getRequestDispatcher("JSP FILE NAME").forward(request, response);
+			String result = gson.toJson(postList);
+			
+			response.setContentType("application/json");	
+			pw.print(result);
+			pw.flush();
+			pw.close();
+
 			
 		} catch (IOException e) {
 			System.out.println("IOException in DisplayServlet: "+ e);
