@@ -16,12 +16,12 @@
 					var p='';
 					$.each(result, function() {
 					  p+=  "<div class='post'>"+
-						"<img src='"+ this.postImage+"'><br>"+
+						"<img style='width:300px'class='postimage' src='"+ this.postImage+"'><br>"+
 					    "<div class='caption'>"+
 					    	"<div class='profile'>"+
-					    		"<img src='"+ this.profilePicture+"'> <p>"+this.username+"</p>"+
+					    		"<img style='height:40px' src='"+ this.profilePicture+"'> <p>"+this.username+"</p>"+
 					    	"</div>"+
-					    	"<p>"+this.postText+"</p>"+
+					    	"<p>  "+this.postText+"</p>"+
 					    "</div>"+
 					    "</div>"+
 					    "<br>"+
@@ -41,9 +41,9 @@
 <body onload="displayJSON(); return false" >
 	
 		<header>
-			<h1>Home</h1>
-			<li><<a href="Login.html"> Login page </a></li>
+			<h1>Welcome!</h1>
 		</header>
+		<a href="Login.html"><input class="homebttn" type="button" value="Login Page"/> </a>
 		
 		<div id="result"></div>
 </body>
