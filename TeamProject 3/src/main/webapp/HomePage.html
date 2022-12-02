@@ -3,56 +3,70 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="./CSS/HomePage.css">
+
 </head>
 <title>HomePage</title>
-
-
-<body style="background-color: #990000">
+<body onload="displayJSON(); return false" style="background-color: #990000">
 	<div style="height: 600px;">
 		<div style="text-align: center; color: white;">
-			<h1>Home</h1>
-			<img style="margin: auto" class="header-icon" src="./assets/t2t_logo.png" alt="logo"/>
-			
-			<p>Name:</p> <div id="profile-username"></div>
+			<h1>Welcome!</h1>
+			<!-- <p>Welcome </p> <div id="profile-username"></div> <p!> -->
 
-			<form action="DisplayServlet">
+			<!-- <form action="DisplayServlet">
 				<label for="display">Display Posts</label>
 				<input type="submit" id="display" value="click" style = "background-color: #FFCC00">
-			</form>
+			</form> -->
 			<div id="result"></div>
 		</div>
 	</div>
-</body>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<!--  <div class="footer" style='display:none' id='footer'> -->
+	<br>
+	 <div id="footer">
+	 </div>
+	
+	<!-- </div> -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script type="text/javascript">
 		function displayJSON() {
 			$.ajax({
 				type : "GET",
 				url : "DisplayServlet",
+				dataType:"json",
 				success : function(result) {
-					var name = "<p>Name: "+ result.username + "</p>";
+					var p='';
+					$.each(result, function() {
+					  p+=  "<img src='"+ this.postImage+"'><br>"+
+					    "<div class='caption'>"+
+					    	"<div class='profile'>"+
+					    		"<img src='"+ this.profilePicture+"'> <p>"+this.username+"</p>"+
+					    	"</div>"+
+					    	"<p>"+this.postText+"</p>"+
+					    "</div>"+
+					    "<br>"+
+					    "<br>"+
+					    "<br>";	
+					});
 					
-					$('#profile-username').html(name);
-
-				},
+					var foot ="<a href='HomePage.html'><img class='footer-icon' src='./assets/home-icon.png' alt='home'/></a>"+
+					"<a href='Search.html'><img class='footer-icon' src='./assets/search-icon.png' alt='search'/></a>" +
+	 				"<a href='Chat.html'><img class='footer-icon' src='./assets/chat-icon.png' alt='chat'/></a>"+
+	    			"<a href='Profile.html'><img class='footer-icon' src='./assets/user.png' alt='profile'/></a>";
+					
+					$('#result').html(p);
+					$('#footer').html(foot);
+			 
+			},
 				error: function(errorMessage) {
 					$('#showing').html('ERROR');
+					
 				}
 			});
 	
 			return false;
-		}
-		
+		};
 
 	
 	</script>
-	
-
-	<div class="footer">
-		<a href="HomePage.html"><img class="footer-icon" src="./assets/home-icon.png" alt="home"/></a>
-	    <a href="Search.html"><img class="footer-icon" src="./assets/search-icon.png" alt="search"/></a>
-	    <a href="Chat.html"><img class="footer-icon" src="./assets/chat-icon.png" alt="chat"/></a>
-	    <a href="Profile.html"><img class="footer-icon" src="./assets/user.png" alt="profile"/></a>
-	</div>
+</body>
+ 
 </html>
