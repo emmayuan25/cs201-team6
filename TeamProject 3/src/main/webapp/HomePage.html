@@ -6,14 +6,31 @@
 </head>
 <title>HomePage</title>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<body style="background-color: #990000">
+	<div style="height: 600px;">
+		<div style="text-align: center; color: white;">
+			<h1>Navigation</h1>
+			<p>Name:</p> <div id="profile-username"></div>
+
+			<form action="DisplayServlet">
+				<label for="display">Display Posts</label>
+				<input type="submit" id="display" value="click" style = "background-color: #FFCC00">
+			</form>
+			<div id="result"></div>
+		</div>
+	</div>
+</body>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script type="text/javascript">
+		$(document).ready(
 		function displayJSON() {
 			$.ajax({
 				type : "GET",
 				url : "DisplayServlet",
 				success : function(result) {
-					var name = result.username;
+					var name = "<p>Name: "+ result.username + "</p>";
 					
 					$('#profile-username').html(name);
 
@@ -24,26 +41,13 @@
 			});
 	
 			return false;
-		};
+		}
 		
+
 	
-</script>
-<!-- $(document).ready(  -->
+	</script>
+	
 
-<body style="background-color: #990000">
-	<div style="height: 600px;">
-		<div style="text-align: center; color: white;">
-			<h1>Navigation</h1>
-			<p>Name:</p> <div id="profile-username"></div>
-
-			<form action="DisplayServlet">
-				<label for="display">Display Posts</label><br></br>
-				<input type="submit" id="display" value="click" style = "background-color: #FFCC00">
-			</form>
-			<div id="result"></div>
-		</div>
-	</div>
-</body>
 <footer style="background-color: white">
     <div class="table">
         <ul id="horizontal-list">
