@@ -30,6 +30,14 @@
     margin-right: 0.5rem;
     margin-top: 0.5rem;
 }
+
+  .header-icon {
+    width: 12rem;
+    justify-content: space-evenly;
+    display: flex;
+    margin-right: 0.5rem;
+    margin-top: 0.5rem;
+}
   
   .content{
   	text-align: center;
