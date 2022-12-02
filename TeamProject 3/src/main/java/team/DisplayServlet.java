@@ -25,22 +25,28 @@ public class DisplayServlet extends HttpServlet{
 		try {
 			
 			PrintWriter pw = response.getWriter();
+			Gson gson = new Gson();
+			
+			HttpSession session = request.getSession(false);
+			User user = (User) session.getAttribute("user");
+			
+			List<Post> postList = JDBCConnector.displayPosts(user);
+			out.print(gson.toJson(postList));	
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 			response.setStatus(HttpServletResponse.SC_OK);
 
 			HttpSession session = request.getSession(false);
 			User user = (User) session.getAttribute("user");
-			System.out.println("Edit profile:"+user.getUsername());
 		
-			
 			String result = gson.toJson(user);
-			
+			pw.print(gson.toJson(postList));	
+
 			pw.write(result);
 			pw.flush();
 		}
 		catch (IOException e){
 			e.printStackTrace();
 		}
-	}	
+	}
 }
