@@ -14,7 +14,7 @@
 			<div id="profile-image"></div>
 			<div id="profile-interests"></div>
 		</div>
-		<form action="EditProfileServlet" name="editform" method="POST">
+		<form onsubmit="updateProfile()" name="editform" method="POST">
 			<label for="username" name="username">Username:</label>
 			<input name="username" id="new-username" placeholder="Modify username" />
 			
@@ -60,20 +60,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script type="text/javascript">
 		function displayJSON() {
-			console.log('something');
-			var userID = 1;
 			$.ajax({
 				type : "GET",
 				url : "EditProfileServlet",
-				data: {
-					userID: userID
-				},
 				success : function(result) {
-					console.log('something3');
-					console.log(result);
 					var name = "<p>Current Username: "+ result.username + "</p>";
 					var image = "<p>Current profile image: <img style='width:10vw;' src='"+ result.profilePicture + "' alt='profile-pic' /></p>";
-					var interests = "<p>Interests: "+ result.interestID + "</p>";
+					var interests = "<p>Interests: "+ result.interest + "</p>";
 					
 					$('#profile-username').html(name);
 					$('#profile-image').html(image);
@@ -88,8 +81,35 @@
 	
 			return false;
 		};
+		
+	function updateProfile(){
+			var selectedInterest = new Array();
+			$('input[name="interest"]:checked').each(function() {
+				selectedInterest.push(this.value);
+			});
+			alert(selectedInterest);
+			$.ajax({
+				type : "POST",
+				url : "EditProfileServlet",
+				dataType:"json",
+				data: {
+					username: editform.username.value,
+					image: editform.image.value,
+					interest: selectedInterest
+				},
+				success : function(result) {
+					
+
+					
+				},
+				error: function(errorMessage) {
+					$('#showing').html('ERROR');
+				}
+			});
+	
+			return false;
+		};
 	
 	</script>
 	
 </body>
-</html>
