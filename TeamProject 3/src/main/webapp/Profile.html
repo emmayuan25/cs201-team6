@@ -10,42 +10,44 @@
 	<div class="page">
 		<h1>Profile</h1>
 		<div>
-			<div id="profile-username"></div>
+			
 			<div id="profile-image"></div>
+			<!--<img src="https://filmschoolrejects.com/wp-content/uploads/2021/01/critics-picks-best-movies-2020.jpg" alt="profilepic.com" style="width:104px;height:104px;">  -->
+			<div id="profile-username"></div>
 			<div id="profile-interests"></div>
 		</div>
-		<form onsubmit="updateProfile()" name="editform" method="POST">
+		<form action="EditProfileServlet" name="editform" method="POST">
+		
+			<h3>Edit your user profile below and submit: </h3>
 			<label for="username" name="username">Username:</label>
 			<input name="username" id="new-username" placeholder="Modify username" />
 			
 			<br>
 			<label for="image">image:</label>
-			<input type="text" id="image" name="image" placeholder="Modify profile picture">
+			<input type="text" id="image" name="image" placeholder="Modify profile picture"><br>
 			
-			<br>
-	    	<label for="interest">Interest:</label>
-	   		<br>
+	    	<h4><label for="interest">Interests:</label></h4>
 	   		
 	   		<input id="interest1" type="checkbox" name="interest" value="marshall">
-			<label for="interest1"> Marshall</label><br>
+			<label for="interest1"> Marshall</label>
 			<input id="interest2" type="checkbox" name="interest" value="viterbi">
-			<label for="interest2"> Viterbi</label><br>
+			<label for="interest2"> Viterbi</label>
 			<input  id="interest3" type="checkbox" name="interest" value ="dornsife">
-			<label for="interest3">Dornsife</label>
+			<label for="interest3">Dornsife</label><br>
 			<input  id="interest4" type="checkbox" name="interest" value ="computerScience">
 			<label for="interest4">Computer Science</label>
 			<input  id="interest5" type="checkbox" name="interest" value ="csba">
-			<label for="interest5">CSBA</label>
+			<label for="interest5">CSBA</label><br>
 			<input  id="interest6" type="checkbox" name="interest" value ="businessAdmin">
 			<label for="interest6">Business Administration</label>
 			<input  id="interest7" type="checkbox" name="interest" value ="csgames">
-			<label for="interest7">CS Games</label>
+			<label for="interest7">CS Games</label><br>
 			<input  id="interest8" type="checkbox" name="interest" value ="cais">
 			<label for="interest8">CAIS</label>
 			<input  id="interest9" type="checkbox" name="interest" value ="athenaHacks">
 			<label for="interest9">Athena Hacks</label>
 			<input  id="interest10" type="checkbox" name="interest" value ="scope">
-			<label for="interest10">Scope</label>
+			<label for="interest10">Scope</label><br></br>
 			<input type="submit">
 		</form>
 
@@ -56,7 +58,7 @@
             <a href="Profile.html"><img class="footer-icon" src="./assets/user.png" alt="profile"/></a>
         </div>
 	</div>
-	
+		
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script type="text/javascript">
 		function displayJSON() {
@@ -113,3 +115,4 @@
 	</script>
 	
 </body>
+</html>
