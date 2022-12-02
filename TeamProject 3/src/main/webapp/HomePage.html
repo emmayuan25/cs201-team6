@@ -3,28 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="./CSS/HomePage.css">
-
-</head>
-<title>HomePage</title>
-<body onload="displayJSON(); return false" style="background-color: #990000">
-	<div style="height: 600px;">
-		<div style="text-align: center; color: white;">
-			<h1>Welcome!</h1>
-			<!-- <p>Welcome </p> <div id="profile-username"></div> <p!> -->
-
-			<!-- <form action="DisplayServlet">
-				<label for="display">Display Posts</label>
-				<input type="submit" id="display" value="click" style = "background-color: #FFCC00">
-			</form> -->
-			<div id="result"></div>
-		</div>
-	</div>
-	<!--  <div class="footer" style='display:none' id='footer'> -->
-	<br>
-	 <div id="footer">
-	 </div>
-	
-	<!-- </div> -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script type="text/javascript">
 		function displayJSON() {
@@ -35,25 +13,27 @@
 				success : function(result) {
 					var p='';
 					$.each(result, function() {
-					  p+=  "<img src='"+ this.postImage+"'><br>"+
+						p+=  "<div class='post'>"+
+						"<img style='width:300px'class='postimage' src='"+ this.postImage+"'><br>"+
 					    "<div class='caption'>"+
 					    	"<div class='profile'>"+
-					    		"<img src='"+ this.profilePicture+"'> <p>"+this.username+"</p>"+
+					    		"<img style='height:40px' src='"+ this.profilePicture+"'> <p>"+this.username+"</p>"+
 					    	"</div>"+
-					    	"<p>"+this.postText+"</p>"+
+					    	"<p>  "+this.postText+"</p>"+
+					    "</div>"+
 					    "</div>"+
 					    "<br>"+
 					    "<br>"+
 					    "<br>";	
 					});
 					
-					var foot ="<a href='HomePage.html'><img class='footer-icon' src='./assets/home-icon.png' alt='home'/></a>"+
+					/* var foot ="<a href='HomePage.html'><img class='footer-icon' src='./assets/home-icon.png' alt='home'/></a>"+
 					"<a href='Search.html'><img class='footer-icon' src='./assets/search-icon.png' alt='search'/></a>" +
 	 				"<a href='Chat.html'><img class='footer-icon' src='./assets/chat-icon.png' alt='chat'/></a>"+
 	    			"<a href='Profile.html'><img class='footer-icon' src='./assets/user.png' alt='profile'/></a>";
-					
+					 */
 					$('#result').html(p);
-					$('#footer').html(foot);
+					/* $('#footer').html(foot); */
 			 
 			},
 				error: function(errorMessage) {
@@ -67,6 +47,28 @@
 
 	
 	</script>
+</head>
+<title>HomePage</title>
+<body onload="displayJSON(); return false" >
+	
+		<header>
+			<h1>Welcome!</h1>
+		</header>
+		<a href="CreatePost.html"><input class="homebttn" type="button" value="Create Post"/> </a>
+		
+		<div id="result"></div>
+	<!--  <div class="footer" style='display:none' id='footer'> -->
+	<br>
+	 <div class="footer" id="footer">
+	 	<a href="HomePage.html"><img class="footer-icon" src="./assets/home-icon.png" alt="home"/></a>
+			<a href="Search.html"><img class="footer-icon" src="./assets/search-icon.png" alt="search"/></a>
+			<a href="Chat.html"><img class="footer-icon" src="./assets/chat-icon.png" alt="chat"/></a>
+			<a href="Profile.html"><img class="footer-icon" src="./assets/user.png" alt="profile"/></a>
+	 </div>
+	
+	<!-- </div> -->
+	
 </body>
+
  
 </html>
