@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body style="background-color: #990000">
+
+	<div style="background-color: #990000; height: 600px;display:flex;flex-direction:column; align-items:center; justify-content: center;">
+		<div style="text-align: center; color: white;">
+			<h1>Create Post</h1>
+			<form action="CreatePostServlet" name="createForm" method="POST">
+				<lable for="image">Image:<lable> <input type="text"
+					id="image" name="image"> <br>
+				<lable for="text">Text:<lable> <input type="text"
+					id="text" name="text"> <br>
+				<label for="interest">Interest:</label> <select id="interest"
+					name="interestList">
+					<option value="marshall">Marshall</option>
+					<option value="viterbi">Viterbi</option>
+					<option value="dornsife">Dornsife</option>
+					<option value="marshall">Marshall</option>
+					<option value="computerScience">Computer Science</option>
+					<option value="csba">CSBA</option>
+					<option value="businessAdmin">Business Administration</option>
+					<option value="csgames">CS Games</option>
+					<option value="cais">CAIS</option>
+					<option value="athenaHacks">Athena Hacks</option>
+					<option value="scope">Scope</option>
+				</select> <br>
+				<input style="margin-top:1em; cursor:pointer;background-color:#FFC72C;border-radius:4px; height:5vh; color:#fff; width:10vw;" type="submit">
+			</form>
+
+			
+		</div>
+		<button style="background-color:#FFC72C;border-radius:4px; height:5vh;margin-top:1em;width:10vw;">
+				<a href="HomePage" style="text-decoration: none; color:#fff;"> Home Page </a>
+		</button>
+	</div>
+</body>
+</html>

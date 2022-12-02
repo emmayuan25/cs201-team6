@@ -1,0 +1,130 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/* footer */
+.footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 100vw;
+    height: 3.5rem;
+    background-color: #F9F9F9;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    position: fixed;
+    bottom: 0;
+}
+
+.footer-icon {
+    width: 2rem;
+    justify-content: space-evenly;
+    display: flex;
+    margin-right: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+/* page */
+.page {
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    padding: 0;
+}
+
+#chat-container {
+    height: 100vh;
+    background-color: #F9F9F9;
+    display: flex;
+}
+
+#chat-box {
+    background-color: #990000;
+    width: 83vw;
+    height: 90vh;
+    scroll-behavior: smooth;
+    overflow-y: auto;
+    padding-bottom: 6rem;
+    position: relative;
+    margin-top: 0;
+}
+
+.contact-box {
+    justify-content: center;
+    display: flex;
+    padding-top: 2em;
+    padding-bottom: 2em;
+    height: 5vh;
+    cursor: pointer;
+    background-color: #F9F9F9;
+}
+
+.contact-name {
+    margin-left: 1em;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    font-size: large;
+}
+
+#chat-list {
+    width: 16rem;
+}
+
+.msgboxr {
+    background-color: transparent;
+    color: #fff;
+    margin: 3em;
+    font-size: large;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.msgboxl {
+    background-color: transparent;
+    color: #fff;
+    margin: 3em;
+    font-size: large;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.msguser {
+    width: 2.5rem;
+    height: 2.5rem;
+    justify-content: center;
+    display: flex;
+    margin-right: 1rem;
+    margin-left: 1rem;
+}
+
+.msgtext {
+    border: solid;
+    padding: 1rem;
+    border-radius: 6px;
+}
+
+.active {
+    background-color: #FFCC00;
+}
+
+#send-msg-input {
+    border: solid;
+    border-radius: 6px;
+    width: 70vw;
+    display: flex;
+    height: 3rem;
+    padding-left: 0.5rem;
+    bottom: 3.5rem;
+    align-items: center;
+}
+
+#send-msg-btn {
+    display: flex;
+    position: relative;
+    align-items: center;
+    background-color: #990000;
+    color: #fff;
+    cursor: pointer;
+}

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./CSS/chat.css" />
+    <title>Chat</title>
+	
+</head>
+<body onload="getContactList(); connectToServer();">
+	<!-- <form action="DisplayChatsServlet" method="POST">
+		<h1>Display current chats</h1>
+		<input type="submit">
+	</form>
+	<div id='result' class='result'></div> -->
+	
+	<div class="page">
+        <div id="chat-container">
+            <div id="chat-list"></div>
+            <div>
+                <div id="chat-box"></div>
+                <div style="display: flex;position:fixed;bottom:3.5rem;width:80vw;">
+                    <input id="send-msg-input" type='text' placeholder='Chat message' />
+                    <button id="send-msg-btn" onclick="sendMessage();">Send</button>
+                </div>
+            </div>
+            
+        </div>
+        <div class="footer">
+            <a href="HomePage.html"><img class="footer-icon" src="./assets/home-icon.png" alt="home"/></a>
+            <a href="Search.html"><img class="footer-icon" src="./assets/search-icon.png" alt="search"/></a>
+            <a href=""><img id="footer-icon" class="footer-icon" src="./assets/chat-icon.png" alt="chat"/></a>
+            <a href="Profile.html"><img class="footer-icon" src="./assets/user.png" alt="profile"/></a>
+        </div>
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="./Javascript/chat.js"></script>
+    
+    <script type="text/javascript">
+
+        // load chat messaging
+        function selectChat(e, chatID) {
+            $('.contact-box').removeClass('active').filter(e).toggleClass('active');
+
+            console.log("Selected chat userid: " + chatID);
+            localStorage.setItem("selectedID", chatID);
+
+            var userID = localStorage.getItem("userID");
+
+            var chatbox = document.getElementById("chat-box");
+            chatbox.innerHTML = "";
+
+            $.ajax({
+                type: "GET",
+                url: "ConvoServlet",
+                async: true,
+                data: {
+                    userID: userID,
+                    friendID: chatID
+                },
+                success: function(result) {
+                	result = result.messagesList;
+                	console.log(result);
+                    for(var i = 0; i < result.length; i++) {
+                    	console.log(parseInt(result[i].senderID));
+                    	console.log(parseInt(userID));
+                        if(parseInt(result[i].senderID) === parseInt(userID)) {
+                        	console.log("who sent it");
+                            chatbox.appendChild(addMsg(result[i].messageText, true, result[i].senderProfilePicture));
+                        } else {
+                            chatbox.appendChild(addMsg(result[i].messageText, false, result[i].senderProfilePicture));
+                        }
+                    }
+                }
+            });
+            return false;
+        };
+
+        // load contact list
+        function getContactList() {
+            var userID = localStorage.getItem("userID");
+            // var userID = 1;
+            
+            console.log("Current userid:" + userID);
+
+            // e.preventDefault();
+
+            var contactList = document.getElementById("chat-list");
+            $.ajax({
+                type: "GET",
+                url: "DisplayChatsServlet",
+                async: true,
+                data: {
+                    UID: userID
+                },
+                success: function(result) {
+                	for(var i = 0; i < result.chatsList.length; i++) {
+                    	console.log(result.chatsList[i].friendUserName);
+                        contactList.appendChild(addContact(result.chatsList[i].friendUserName, result.chatsList[i].friendID, result.chatsList[i].friendUserImage));
+
+                	}
+                }
+            });
+            return false;
+        }
+
+
+        // web socket
+        var socket;
+        
+        function connectToServer() {
+        	// Add your project name !
+            var projectName = "GroupProject";
+
+        	socket = new WebSocket("ws://localhost:8080/"+ projectName +"/ws");
+            
+     
+            socket.onopen = function(event) {
+                console.log("socket connected");
+            }
+            socket.onmessage = function(event) {
+            	console.log(event.data);
+            	
+            	var event = JSON.parse(event.data);
+            	var profileImg = localStorage.getItem("profileImg");
+                var userID = localStorage.getItem("userID");
+            	
+            	if(event.receiverID == userID) {
+            		document.getElementById("chat-box").appendChild(addMsg(event.message, false, profileImg));
+            	}
+            	
+            }
+            socket.onclose = function(event) {
+                console.log("disconnected");
+            }
+        }
+        function sendMessage() {
+            
+        	var msginput = document.getElementById("send-msg-input").value;
+            var fromID = localStorage.getItem("userID");
+            var toID = localStorage.getItem("selectedID");
+            
+        	console.log(msginput);
+        	console.log(fromID);
+        	console.log(toID);
+
+        	var profileImg = "placeholder"; 
+
+			sendMsg();
+
+        	var json = fromID + " " + toID + " " + msginput;
+            socket.send(json);
+            
+            msginput.value = "";
+            
+            return false;
+        }
+
+
+    </script>
+
+</body>
+</html>

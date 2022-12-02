@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="./CSS/HomePage.css">
+	
+</head>
+<title>HomePage</title>
+<body onload="displayJSON(); getUserID();" >
+	
+		<header>
+			<h1>Welcome!</h1>
+		</header>
+		<a href="CreatePost.html"><input class="homebttn" type="button" value="Create Post"/> </a>
+		
+		<div id="result"></div>
+	<!--  <div class="footer" style='display:none' id='footer'> -->
+	<br>
+	 <div class="footer" id="footer">
+	 	<a href="HomePage.html"><img class="footer-icon" src="./assets/home-icon.png" alt="home"/></a>
+			<a href="Search.html"><img class="footer-icon" src="./assets/search-icon.png" alt="search"/></a>
+			<a href="Chat.html"><img class="footer-icon" src="./assets/chat-icon.png" alt="chat"/></a>
+			<a href="Profile.html"><img class="footer-icon" src="./assets/user.png" alt="profile"/></a>
+	 </div>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		function displayJSON() {
+			var input = localStorage.getItem("userName");
+			$.ajax({
+				type : "GET",
+				url : "DisplayServlet",
+				async: true,
+				data: {
+					username: input
+				},
+				success : function(result) {
+					console.log(result);
+					var p='';
+					$.each(result, function() {
+						console.log(result[0]);
+						p+=  "<div class='post'>"+
+						"<img style='width:300px'class='postimage' src='"+ this.postImage+"'><br>"+
+					    "<div class='caption'>"+
+					    	"<div class='profile'>"+
+					    		"<img style='height:40px' src='"+ this.profilePicture+"'> <p>"+this.username+"</p>"+
+					    	"</div>"+
+					    	"<p>  "+this.postText+"</p>"+
+					    "</div>"+
+					    "</div>"+
+					    "<br>"+
+					    "<br>"+
+					    "<br>";	
+					});
+					
+					/* var foot ="<a href='HomePage.html'><img class='footer-icon' src='./assets/home-icon.png' alt='home'/></a>"+
+					"<a href='Search.html'><img class='footer-icon' src='./assets/search-icon.png' alt='search'/></a>" +
+	 				"<a href='Chat.html'><img class='footer-icon' src='./assets/chat-icon.png' alt='chat'/></a>"+
+	    			"<a href='Profile.html'><img class='footer-icon' src='./assets/user.png' alt='profile'/></a>";
+					 */
+					$('#result').html(p);
+					/* $('#footer').html(foot); */
+			 
+			},
+				error: function(errorMessage) {
+					$('#showing').html('ERROR');
+					
+				}
+			});
+	
+			return false;
+		};
+		
+		function getUserID() {
+			console.log("getting user id");
+			var input = localStorage.getItem("userName");
+			$.ajax({
+				type: "GET",
+				url: "GetIDServlet",
+				async: true,
+				data: {
+					username: input
+				},
+				success: function(result) {
+					console.log(result);
+					localStorage.setItem("userName", result.username);
+					localStorage.setItem("userID", result.userID);
+					localStorage.setItem("profileImg", result.profilePicture);
+
+					console.log("userid" + localStorage.getItem("userID"));
+
+		        }
+			});
+			
+			
+			return false;
+		}
+
+	
+	</script>
+	
+</body>
+
+ 
+</html>

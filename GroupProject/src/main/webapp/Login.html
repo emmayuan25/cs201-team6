@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Login</title>
+<link rel="stylesheet" href="./CSS/Login.css">
+
+</head>
+<body class="newBackgroundColor">
+	<div>
+	<div class="content" > 
+		<h1>Trojan Connect</h1>
+		<h3> Sign in and connect with your fellow Trojans!</h3>
+		<br>
+			<form class="form" action="LoginServlet" method="POST" onsubmit="storeData();">
+			<input
+				type="text"
+				id="username"
+				name="username"
+				placeholder="Username">
+				
+			<input
+			type="password"
+			id="password"
+			name="password"
+			placeholder="Password">
+			<input class="bttn" type="submit" value="Login">
+		
+			</form>
+			
+			<br>
+			 <p style= "fontSize: 30"> New User? Sign up below</p> 
+			 <br>
+			<button >
+				<a href="GuestPage.html"> Use As Guest </a>
+			</button>
+			<br>
+			<br>
+           
+			<button >
+				<a href="Register.html"> Create Account </a>
+			</button>
+	
+			
+		</>
+		
+	</div>
+	</div>
+	<script>
+		function storeData() {
+			var username = document.getElementById("username").value;
+			localStorage.setItem("userName", username);
+		}
+	</script>
+	</>
+</body>
+</html>
