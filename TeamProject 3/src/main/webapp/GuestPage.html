@@ -3,46 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <title>Guest Page</title>
+<link rel="stylesheet" href="./CSS/GuestPage.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script type="text/javascript">
-		$(document).ready(function(){
-			$('#display').click(function(){
-				$.ajax({
-					type:'GET',
-					url:'DisplayAllPostsServlet',
-					dataType: 'JSON',
-					headers: {
-						Accept: "application/json",
-						"Content-Type" : "application/json"
-					},
-					success: function(result){
-		
-						var listPost = $.parseJSON(result);
-						var s='';
-						for(var i=0;i<listPost.length;i++){
-							s+= 'ID: '+ listPost[i].postID + '<br> Username: '+ listPost[i].username + '<br> Image: '+ listPost[i].postImage + '<br> Text: '+ listPost[i].postText+'<br> profilepic:' + listPost[i].profilePicture+'<br>';
-						}
-						document.getElementId('result').innerHTML= s;
-					}
-				});
+	
+	function displayJSON(){
+			$.ajax({
+				type:'GET',
+				url:'DisplayAllPostsServlet',
+				dataType: 'JSON',
+				success: function(result){
+					var p='';
+					$.each(result, function() {
+					  p+=  "<div class='post'>"+
+						"<img src='"+ this.postImage+"'><br>"+
+					    "<div class='caption'>"+
+					    	"<div class='profile'>"+
+					    		"<img src='"+ this.profilePicture+"'> <p>"+this.username+"</p>"+
+					    	"</div>"+
+					    	"<p>"+this.postText+"</p>"+
+					    "</div>"+
+					    "</div>"+
+					    "<br>"+
+					    "<br>"+
+					    "<br>";	
+					});  
+					$('#result').html(p);
+/* 					document.getElementId('result').innerHTML= p;
+ */				}
 			});
+		}	
+			
 
-		});
+		
 	</script>
 </head>
-<body style="background-color: #990000">
+<body onload="displayJSON(); return false" >
 	
-		<div style="background-color: #990000; height: 600px;">
-		<div style="text-align: center; color: white;">
-	<form action="DisplayAllPostsServlet" method="GET">
-			<lable for="display" >Display Posts</lable>
-			<input type="submit" id="display" value="click">
-		</form>
-		<div id="result"></div>
+		<head>
+			<h1>Home</h1>
+			<li><<a href="Login.html"> Login page </a></li>
+		</head>
 		
-		<h1>Go back home</h1>
-		<li><<a href="Login.html"> Login page </a></li>
-		</div>
-		</div>
+		<div id="result"></div>
 </body>
 </html>
