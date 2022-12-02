@@ -13,13 +13,9 @@
 				type : "GET",
 				url : "DisplayServlet",
 				success : function(result) {
-					var name = "<p>Current Username: "+ result.username + "</p>";
-					var image = "<p>Current profile image: <img style='width:10vw;' src='"+ result.profilePicture + "' alt='profile-pic' /></p>";
-					var interests = "<p>Interests: "+ result.interest + "</p>";
+					var name = result.username;
 					
 					$('#profile-username').html(name);
-					$('#profile-image').html(image);
-					$('#profile-interests').html(interests);
 
 				},
 				error: function(errorMessage) {
@@ -41,7 +37,7 @@
 			<p>Name:</p> <div id="profile-username"></div>
 
 			<form action="DisplayServlet">
-				<label for="display">Display Posts</label>
+				<label for="display">Display Posts</label><br></br>
 				<input type="submit" id="display" value="click" style = "background-color: #FFCC00">
 			</form>
 			<div id="result"></div>
