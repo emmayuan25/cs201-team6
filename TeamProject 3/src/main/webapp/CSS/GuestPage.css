@@ -36,6 +36,15 @@ h1{
 	margin: auto;
 }
 
+.header-icon {
+    width: 12rem;
+    justify-content: space-evenly;
+    display: flex;
+    margin-right: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+
 
 .caption{
 	background-color:rgb(255, 199, 44);
