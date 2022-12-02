@@ -43,6 +43,16 @@
 		color:white;
 	}
 	
+	input[type=text]{
+		padding-left: 10px;
+		color:white;
+	}
+	
+	input[type=password]{
+		padding-left: 10px;
+		color:white;
+	}
+	
 	.bttn{
 		width: 300px;
 		background-color: white;
@@ -68,4 +78,3 @@
 		color: white;
 		text-decoration:none;
 	}
-	
