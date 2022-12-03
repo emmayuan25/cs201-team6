@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+	body{
+		background-color: #990000;
+		text-align:center;
+		align-items:center;
+		font-family: arial;
+		
+	}
+	
+	h1{
+		color:white;
+		text-align:center;
+		margin-bottom: 15px;
+		
+	}
+	
+	lable{
+		color: white;
+		font-size: 25px;
+		margin-bottom: 5px;
+		
+	}
+	
+	form{
+		display:grid;
+		align-items:center;
+		width: 500px;
+		padding-top: 15px;
+		margin: auto;
+		
+	}
+	
+	.interest{
+		width: 300px;
+		align-items:center;
+		margin:auto;
+		height: 40px;
+		border-radius:20px;
+	}
+	
+	.interest lable{
+		margin-bottom: 10px;
+	}
+	
+	.inputs{
+		margin: auto;
+		margin-bottom: 15px;
+		width: 300px;
+		text-align:left;
+		
+	}
+	
+	
+	input{
+		height: 40px;
+		width: 100%;
+		margin-bottom: 20px;
+		border-radius: 20px;
+		border: white;
+	}
+	
+	
+	
+	.createBttn{
+		width: 300px;
+		background-color: rgb(255, 199, 44);
+		color: white;
+		font-size: 15px;
+		margin: auto;
+	}
+	
+	
+	
+		.homebttn {
+		text-decoration: none;
+		color:  #990000;
+		border: 1px sold white;
+		background-color: white;
+		width: 200px;
+		height: 40px;
+		border-radius: 10px;
+		box-shadow: none;
+	}
+	
+	
+	
+	
+	
+</style>
+</head>
+<body style="background-color: #990000">
+
+	<div style="background-color: #990000; height: 600px;display:flex;flex-direction:column; align-items:center; justify-content: center;">
+		<div style="text-align: center; color: white;">
+			<h1>Create Post</h1>
+			<form action="CreatePostServlet" name="createForm" method="POST">
+				<lable for="image">Image:<lable> <input type="text"
+					id="image" name="image"> <br>
+				<lable for="text">Text:<lable> <input type="text"
+					id="text" name="text"> <br>
+				<label for="interest">Interest:</label> <select id="interest"
+					name="interestList">
+					<option value="marshall">Marshall</option>
+					<option value="viterbi">Viterbi</option>
+					<option value="dornsife">Dornsife</option>
+					<option value="marshall">Marshall</option>
+					<option value="computerScience">Computer Science</option>
+					<option value="csba">CSBA</option>
+					<option value="businessAdmin">Business Administration</option>
+					<option value="csgames">CS Games</option>
+					<option value="cais">CAIS</option>
+					<option value="athenaHacks">Athena Hacks</option>
+					<option value="scope">Scope</option>
+				</select> <br>
+				<input style="margin-top:1em; cursor:pointer;background-color:#FFC72C;border-radius:4px; height:5vh; color:#fff; width:10vw;" type="submit">
+			</form>
+
+			
+		</div>
+		<button style="background-color:#FFC72C;border-radius:4px; height:5vh;margin-top:1em;width:10vw;">
+				<a href="HomePage.html" style="text-decoration: none; color:#fff;"> Home Page </a>
+		</button>
+	</div>
+</body>
+</html>

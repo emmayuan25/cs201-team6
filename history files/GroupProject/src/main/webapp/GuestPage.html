@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Guest Page</title>
+<link rel="stylesheet" href="./CSS/GuestPage.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript">
+	
+	function displayJSON(){
+			$.ajax({
+				type:'GET',
+				url:'DisplayAllPostsServlet',
+				dataType: 'JSON',
+				success: function(result){
+					console.log(result);
+					var p='';
+					$.each(result, function() {
+					  p+=  "<div class='post'>"+
+						"<img style='width:300px'class='postimage' src='"+ this.postImage+"'><br>"+
+					    "<div class='caption'>"+
+					    	"<div class='profile'>"+
+					    		"<img style='height:40px' src='"+ this.profilePicture+"'> <p>"+this.username+"</p>"+
+					    	"</div>"+
+					    	"<p>  "+this.postText+"</p>"+
+					    "</div>"+
+					    "</div>"+
+					    "<br>"+
+					    "<br>"+
+					    "<br>";	
+					});  
+					$('#result').html(p);
+/* 					document.getElementId('result').innerHTML= p;
+ */				}
+			});
+		}	
+			
+
+		
+	</script>
+</head>
+<body onload="displayJSON();" >
+	
+		<header>
+			<h1>Welcome!</h1>
+		</header>
+		<img style="margin: auto" class="header-icon" src="./assets/t2t_logo.png" alt="logo"/>
+		<a href="Login.html"><input class="homebttn" type="button" value="Login Page"/> </a>
+		
+		<div id="result"></div>
+</body>
+</html>

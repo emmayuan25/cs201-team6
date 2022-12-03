@@ -1,0 +1,85 @@
+body {
+    
+    font-family: arial;
+    background-color: #990000;
+	text-align: center;
+	color: #fff;
+}
+
+form{
+		display:grid;
+		align-items:center;
+		width: 500px;
+		margin: auto;
+		
+		
+	}
+
+.createBttn{
+		width: 300px;
+		background-color: rgb(255, 199, 44);
+		color: white;
+		font-size: 15px;
+		margin: auto;
+		cursor: pointer;
+		text-align: center;
+		height: 40px;
+		border-radius:20px;
+	}
+	
+.inputs{
+		
+		display:grid;
+		margin: auto;
+		width: 300px;
+		
+	}
+	
+.interests{
+	text-align:center;
+}
+	
+lable{
+	text-align:left;
+}
+
+input{
+	height: 40px;
+	border-radius:20px;
+	text-align:left;
+	border: white;
+	
+}
+/* footer */
+.footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 100vw;
+    height: 3.5rem;
+    background-color: #F9F9F9;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    position: fixed;
+    bottom: 0;
+}
+
+.footer-icon {
+    width: 2rem;
+    justify-content: space-evenly;
+    display: flex;
+    margin-right: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+
+h1 {
+	margin: 0;
+	padding: 20px;
+}
+
+.page {
+	padding-bottom: 10vh;
+}
+
+

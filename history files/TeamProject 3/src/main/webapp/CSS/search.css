@@ -1,0 +1,82 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/* footer */
+.footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 100vw;
+    height: 3.5rem;
+    background-color: #F9F9F9;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    position: fixed;
+    bottom: 0;
+}
+
+.footer-icon {
+    width: 2rem;
+    justify-content: space-evenly;
+    display: flex;
+    margin-right: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.page {
+    background-color: #990000;
+    height: 100vh;
+    text-align: center;
+    color: #fff;
+}
+
+h1 {
+    margin: 0;
+    padding-top: 3em;
+    padding-bottom: 3em;
+}
+
+#search-input {
+    height: 6vh;
+    width: 40vw;
+    border-radius: 8px;
+    padding-left: 1em;
+}
+
+#submit-btn {
+    height: 6vh;
+    border-radius: 8px;
+    background-color: #990000;
+    color: #fff;
+    cursor: pointer;
+}
+
+#search-result {
+    margin-top: 2em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contact-box {
+    justify-content: flex-start;
+    display: flex;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    padding-left: 1em;
+    margin-bottom: 1em;
+    height: 5vh;
+    cursor: pointer;
+    border: solid;
+    width: 30vw;
+}
+
+.contact-name {
+    margin-left: 1em;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    font-size: large;
+}
